@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>shaders/Player_vertex_shader</file>
-        <file>shaders/Player_fragment_shader</file>
         <file>player.frag</file>
         <file>player.vert</file>
     </qresource>
