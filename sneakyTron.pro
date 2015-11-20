@@ -1,16 +1,17 @@
 QT += core
 
-
 TARGET = sneakyTron
-CONFIG += console
 CONFIG -= app_bundle
+INSTALLS += target
 
 TEMPLATE = app
 
 SOURCES += main.cpp \
     openglwindow.cpp \
-    gamewindow.cpp
+    gamewindow.cpp \
+    player.cpp
 
 HEADERS  += \
     openglwindow.h \
-    gamewindow.h
+    gamewindow.h \
+    player.h
