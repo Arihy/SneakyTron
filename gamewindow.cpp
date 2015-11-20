@@ -6,26 +6,26 @@
 GameWindow::GameWindow()
 {
     for(int i = 0; i < NB_PLAYER; i++)
-        _player.push_back(Player(QVector2D(i, 0), QVector4D(i, 0, 0, 1)));
+        _player.push_back(Player(QVector3D(i, 0, 0), QVector4D(i, 0, 0, 1)));
 }
 
 void GameWindow::initialize(){
 
-    _player_program = new QOpenGLShaderProgram(this);
-    _player_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/Player_vertex_shader");
+    _playerProgram = new QOpenGLShaderProgram(this);
+    _playerProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/Player_vertex_shader");
 
-    _player_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/Player_fragment_shader");
-    _player_program->link();
+    _playerProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/Player_fragment_shader");
+    _playerProgram->link();
 
-    _player_program->bind();
+    _playerProgram->bind();
 
 
-    _player_posAttr=_player_program->attributeLocation("posAttr");
-    _player_colAttr=_player_program->attributeLocation("colAttr");
+    _playerPosAttr=_playerProgram->attributeLocation("posAttr");
+    _playerColAttr=_playerProgram->attributeLocation("colAttr");
 
-    _player_vao.create();
+    _playerVao.create();
 
-    _player_vao.bind();
+    _playerVao.bind();
 
     QVector<QVector3D> position;
     for(int i = 0; i < NB_PLAYER; i++)
@@ -34,14 +34,14 @@ void GameWindow::initialize(){
     }
     int posSize=sizeof(position[0]*position.size());
 
-    _player_vbo_pos.create();
+    _playerVboPos.create();
 
-    _player_vbo_pos.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    _player_vbo_pos.bind();
-    _player_vbo_pos.allocate(posSize);
-    _player_vbo_pos.write(0, position.constData(), posSize);
+    _playerVboPos.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    _playerVboPos.bind();
+    _playerVboPos.allocate(posSize);
+    _playerVboPos.write(0, position.constData(), posSize);
 
-    _player_program->setAttributeBuffer(_player_posAttr, GL_FLOAT, 0, 3, 0);
+    _playerProgram->setAttributeBuffer(_playerPosAttr, GL_FLOAT, 0, 3, 0);
 
 
     QVector<QVector4D> colors;
@@ -51,21 +51,21 @@ void GameWindow::initialize(){
     }
     int colSize=sizeof(colors[0]*colors.size());
 
-    _player_vbo_col.create();
+    _playerVboCol.create();
 
-    _player_vbo_col.setUsagePattern(QOpenGLBuffer::StaticDraw);
-    _player_vbo_col.bind();
-    _player_vbo_col.allocate(colSize);
-    _player_vbo_col.write(0, colors.constData(), colSize);
+    _playerVboCol.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    _playerVboCol.bind();
+    _playerVboCol.allocate(colSize);
+    _playerVboCol.write(0, colors.constData(), colSize);
 
-    _player_program->setAttributeBuffer(_player_colAttr, GL_FLOAT, 0, 4, 0);
+    _playerProgram->setAttributeBuffer(_playerColAttr, GL_FLOAT, 0, 4, 0);
 
-    _player_program->enableAttributeArray(_player_posAttr);
-    _player_program->enableAttributeArray(_player_colAttr);
+    _playerProgram->enableAttributeArray(_playerPosAttr);
+    _playerProgram->enableAttributeArray(_playerColAttr);
            qDebug()<<"still no crash ..";
 
-    _player_program->release();
-    _player_vao.release();
+    _playerProgram->release();
+    _playerVao.release();
 
 }
 
@@ -75,13 +75,13 @@ void GameWindow::render(){
 
 
 
-    _player_program->bind();
-    _player_vao.bind();
+    _playerProgram->bind();
+    _playerVao.bind();
 
     glEnable(GL_DEPTH_TEST);
     glDrawArrays(GL_POINTS, 0, NB_PLAYER);
 
 
-    _player_vao.release();
-    _player_program->release();
+    _playerVao.release();
+    _playerProgram->release();
 }

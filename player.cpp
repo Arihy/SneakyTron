@@ -30,12 +30,12 @@ void Player::setColor(const QVector4D &color)
     _color = color;
 }
 
-QVector<QVector2D> Player::trail() const
+QVector<QVector3D> Player::trail() const
 {
     return _trail;
 }
 
-void Player::setTrail(const QVector<QVector2D> &trail)
+void Player::setTrail(const QVector<QVector3D> &trail)
 {
     _trail = trail;
 }
@@ -48,12 +48,5 @@ Player::Player(QVector3D position, QVector4D color)
 {
     _position = position;
     _color = color;
-
-
-}
-
-void Player::initialize(){
-    // Initialisation du vao
-
 }
 
