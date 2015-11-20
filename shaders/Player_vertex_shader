@@ -1,0 +1,7 @@
+attribute vec4 posAttr;
+attribute vec4 color;
+varying vec4 col;
+void main() {
+        gl_Position = posAttr;
+	col=color;
+}

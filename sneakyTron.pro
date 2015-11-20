@@ -15,3 +15,6 @@ HEADERS  += \
     openglwindow.h \
     gamewindow.h \
     player.h
+
+
+RESOURCES += gestionnaire.qrc
