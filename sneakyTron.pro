@@ -1,5 +1,5 @@
 QT += core
-
+QMAKE_CXXFLAGS += -stdlib=libc++ -std=c++11
 TARGET = sneakyTron
 CONFIG -= app_bundle
 INSTALLS += target
@@ -18,3 +18,7 @@ HEADERS  += \
 
 
 RESOURCES += gestionnaire.qrc
+
+DISTFILES += \
+    player.frag \
+    player.vert

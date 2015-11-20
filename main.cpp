@@ -9,8 +9,6 @@ int main(int argc, char *argv[])
     
     QSurfaceFormat format;
     format.setSamples(16);
-    format.setDepthBufferSize(1);
-    format.setVersion(3,3);
 
     GameWindow window;
     window.setFormat(format);

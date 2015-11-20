@@ -11,18 +11,19 @@
 class GameWindow : public OpenGLWindow
 {
 private:
+    GLuint loadShader(GLenum type, const char *source);
     QVector<Player> _player;
 
     GLuint _playerPosAttr, _playerColAttr;
+    GLuint _matrixUniform;
     QOpenGLShaderProgram *_playerProgram;
     QOpenGLVertexArrayObject _playerVao;
-    QOpenGLBuffer _playerVboPos, _playerVboCol ;
+    QOpenGLBuffer _playerVbo;
 
 public:
     GameWindow();
     void render();
     void initialize();
-
 };
 
 #endif // GAMEWINDOW_H
