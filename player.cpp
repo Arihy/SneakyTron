@@ -1,5 +1,22 @@
 #include "player.h"
 
+Player::Player()
+{
+}
+
+Player::Player(QVector3D position, QVector3D color)
+{
+    _position = position;
+    _color = color;
+    _moveSpeed = 0.01f;
+}
+
+void Player::move()
+{
+    float newPosition = _position.y() + _moveSpeed;
+    _position.setY(newPosition);
+}
+
 QVector3D Player::position() const
 {
     return _position;
@@ -38,15 +55,5 @@ QVector<QVector3D> Player::trail() const
 void Player::setTrail(const QVector<QVector3D> &trail)
 {
     _trail = trail;
-}
-
-Player::Player()
-{
-}
-
-Player::Player(QVector3D position, QVector3D color)
-{
-    _position = position;
-    _color = color;
 }
 

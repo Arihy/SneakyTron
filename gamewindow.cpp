@@ -7,6 +7,11 @@ GameWindow::GameWindow() : _playerProgram(0)
 {
     for(int i = 0; i < NB_PLAYER; i++)
         _player.push_back(Player(QVector3D(i*0.5f, 0, 0), QVector3D(i, 1, 0)));
+
+    _renderTimer = new QTimer();
+    _renderTimer->start(30);
+
+    connect(_renderTimer, SIGNAL(timeout()), this, SLOT(renderNow()));
 }
 
 void GameWindow::initialize(){
@@ -42,7 +47,7 @@ void GameWindow::initialize(){
 
     _playerVao.bind();
     _playerVbo.write(0, position.constData(), posSize);
-    _playerVbo.write(posSize, colors.constData(), posSize);
+    _playerVbo.write(posSize, colors.constData(), colSize);
 
     _playerProgram->setAttributeBuffer(_playerPosAttr, GL_FLOAT, 0, 3, 0);
     _playerProgram->setAttributeBuffer(_playerColAttr, GL_FLOAT, posSize, 3, 0);
@@ -55,12 +60,25 @@ void GameWindow::initialize(){
     _playerProgram->release();
 }
 
+void initPlayer()
+{
+
+}
+
 GLuint GameWindow::loadShader(GLenum type, const char *source)
 {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, 0);
     glCompileShader(shader);
     return shader;
+}
+
+void GameWindow::updateGame()
+{
+    for(int i = 0; i < NB_PLAYER; i++)
+    {
+        _player[i].move();
+    }
 }
 
 void GameWindow::render(){
@@ -72,6 +90,8 @@ void GameWindow::render(){
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
 
+    updateGame();
+
     _playerProgram->bind();
 
     QMatrix4x4 matrix;
@@ -79,8 +99,21 @@ void GameWindow::render(){
     matrix.translate(0, 0, -2);
 
     _playerProgram->setUniformValue(_matrixUniform, matrix);
+    _playerProgram->setAttributeValue(_playerPosAttr, NB_PLAYER);
+    _playerProgram->setAttributeValue(_playerColAttr, NB_PLAYER);
 
     _playerVao.bind();
+    _playerVbo.bind();
+    QVector<QVector3D> position, colors;
+    for(int i = 0; i < NB_PLAYER; i++)
+    {
+        position.push_back(_player[i].position());
+        colors.push_back(_player[i].color());
+    }
+
+    size_t posSize = sizeof(QVector3D)*position.size(), colSize = sizeof(QVector3D)*colors.size();
+    _playerVbo.write(0, position.constData(), posSize);
+    _playerVbo.write(posSize, colors.constData(), colSize);
 
     glDrawArrays(GL_POINTS, 0, NB_PLAYER);
 

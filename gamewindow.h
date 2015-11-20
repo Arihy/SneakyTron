@@ -3,6 +3,7 @@
 
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui>
+#include <QTimer>
 
 #include "openglwindow.h"
 #include "player.h"
@@ -20,10 +21,13 @@ private:
     QOpenGLVertexArrayObject _playerVao;
     QOpenGLBuffer _playerVbo;
 
+    QTimer *_renderTimer;
+
 public:
     GameWindow();
     void render();
     void initialize();
+    void updateGame();
 };
 
 #endif // GAMEWINDOW_H

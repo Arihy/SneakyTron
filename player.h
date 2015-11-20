@@ -17,6 +17,9 @@ public:
     Player();
     Player(QVector3D, QVector3D);
 
+    void move();
+
+    //GETTER & SETTER
     QVector3D position() const;
     void setPosition(const QVector3D &position);
     float moveSpeed() const;
