@@ -4,7 +4,7 @@ Player::Player()
 {
 }
 
-Player::Player(QVector3D position, QVector3D color)
+Player::Player(QVector3D position, QVector4D color)
 {
     _position = position;
     _color = color;
@@ -37,23 +37,28 @@ void Player::setMoveSpeed(float moveSpeed)
     _moveSpeed = moveSpeed;
 }
 
-QVector3D Player::color() const
+QVector4D Player::color() const
 {
     return _color;
 }
 
-void Player::setColor(const QVector3D &color)
+void Player::setColor(const QVector4D &color)
 {
     _color = color;
 }
 
-QVector<QVector3D> Player::trail() const
+QVector<QVector3D> Player::tail() const
 {
-    return _trail;
+    return _tail;
 }
 
-void Player::setTrail(const QVector<QVector3D> &trail)
+void Player::setTail(const QVector<QVector3D> &tail)
 {
-    _trail = trail;
+    _tail = trail;
+}
+
+void Player::updateTail()
+{
+    _tail.push_back(_position);
 }
 
