@@ -15,6 +15,7 @@ class GameWindow : public OpenGLWindow
 private:
     GLuint loadShader(GLenum type, const char *source);
     QVector<Player> _player;
+    QVector4D *_colorList;
 
     GLuint _playerPosAttr, _playerColAttr;
     GLuint _tailsPosAttr, _tailsColAttr;

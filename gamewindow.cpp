@@ -8,6 +8,12 @@
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
+    _colorList = new QVector4D[4];
+    _colorList[0] = QVector4D(1.0, 0.2, 0.2, 1.0);
+    _colorList[1] = QVector4D(0.2, 1.0, 0.2, 1.0);
+    _colorList[2] = QVector4D(0.2, 0.2, 1.0, 1.0);
+    _colorList[3] = QVector4D(1.0, 1.0, 0.2, 1.0);
+
     initializeGame();
 
     _renderTimer = new QTimer();
@@ -108,7 +114,7 @@ void GameWindow::initializeGame()
     _player.clear();
     for(int i = 0; i < NB_PLAYER; i++)
     {
-        _player.push_back(Player(QVector3D(i*0.5f, 0, 0), QVector3D(i, 1, 0)));
+        _player.push_back(Player(QVector3D(i*0.5f, -.8, 0), _colorList[i]));
     }
 }
 
