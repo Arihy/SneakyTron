@@ -54,7 +54,7 @@ QVector<QVector3D> Player::tail() const
 
 void Player::setTail(const QVector<QVector3D> &tail)
 {
-    _tail = trail;
+    _tail = tail;
 }
 
 void Player::updateTail()
