@@ -44,6 +44,8 @@ void GameWindow::initPlayerShaderPrograme()
 
     _playerProgram->link();
 
+    _playerProgram->bind();
+
     _playerPosAttr = _playerProgram->attributeLocation("posAttr");
     _playerColAttr = _playerProgram->attributeLocation("colAttr");
     _matrixUniform = _playerProgram->uniformLocation("matrix");
@@ -213,6 +215,22 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
             break;
     case Qt::Key_R:
         initializeGame();
+        break;
+    case Qt::Key_Q:
+        //rotate player1 left
+        _player[0].rotateLeft();
+        break;
+    case Qt::Key_D:
+        //rotate player1 right
+        _player[0].rotateRight();
+        break;
+    case Qt::Key_Left:
+        //rotate player2 left
+        _player[1].rotateLeft();
+        break;
+    case Qt::Key_Right:
+        //rotate player2 right
+        _player[1].rotateRight();
         break;
     }
 }
