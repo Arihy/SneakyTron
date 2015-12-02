@@ -32,7 +32,10 @@ private:
     QTimer *_renderTimer;
     QTimer *_tailTimer;
 
+    QVector< QVector<Qt::Key> > _controller;
+
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
     void initPlayerShaderPrograme();
     void initTailsShaderPrograme();

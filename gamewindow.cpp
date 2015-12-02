@@ -8,6 +8,15 @@
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
+    QVector<Qt::Key> controller;
+    controller.push_back(Qt::Key_Q);
+    controller.push_back(Qt::Key_D);
+    _controller.push_back(controller);
+    controller.clear();
+    controller.push_back(Qt::Key_Left);
+    controller.push_back(Qt::Key_Right);
+    _controller.push_back(controller);
+
     _colorList = new QVector4D[4];
     _colorList[0] = QVector4D(1.0, 0.2, 0.2, 1.0);
     _colorList[1] = QVector4D(0.2, 1.0, 0.2, 1.0);
@@ -116,7 +125,7 @@ void GameWindow::initializeGame()
     _player.clear();
     for(int i = 0; i < NB_PLAYER; i++)
     {
-        _player.push_back(Player(QVector3D(i*0.5f, -.8, 0), _colorList[i]));
+        _player.push_back(Player(_controller[i], QVector3D(i*0.5f, -.8, 0), _colorList[i]));
     }
 }
 
@@ -208,29 +217,26 @@ void GameWindow::render(){
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
+    for(Player &player : _player)
+    {
+        player.keyPressEvent(event);
+    }
+
     switch(event->key())
     {
     case Qt::Key_Escape:
-            close();
-            break;
+        close();
+        break;
     case Qt::Key_R:
         initializeGame();
         break;
-    case Qt::Key_Q:
-        //rotate player1 left
-        _player[0].rotateLeft();
-        break;
-    case Qt::Key_D:
-        //rotate player1 right
-        _player[0].rotateRight();
-        break;
-    case Qt::Key_Left:
-        //rotate player2 left
-        _player[1].rotateLeft();
-        break;
-    case Qt::Key_Right:
-        //rotate player2 right
-        _player[1].rotateRight();
-        break;
+    }
+}
+
+void GameWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    for(Player &player : _player)
+    {
+        player.keyReleaseEvent(event);
     }
 }
