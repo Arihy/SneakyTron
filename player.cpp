@@ -9,7 +9,7 @@ Player::Player(QVector<Qt::Key> controller, QVector3D position, QVector4D color)
     _position = position;
     _color = color;
     _moveSpeed = 0.01f;
-    _rotationSpeed = 10;
+    _rotationSpeed = 5;
     _direction = QVector2D(0, 1);
     _rotateLeft = false;
     _rotateRight = false;
@@ -21,7 +21,7 @@ void Player::move()
 {
     if(_rotateLeft)
         rotateLeft();
-    else if(_rotateRight)
+    if(_rotateRight)
         rotateRight();
     _position += _direction * _moveSpeed;
 }
