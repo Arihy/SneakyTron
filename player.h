@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #define PI 3.14159265
+#define TAIL_LEN_MAX 100
 
 class Player
 {

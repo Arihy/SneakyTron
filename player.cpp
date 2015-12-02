@@ -82,5 +82,9 @@ void Player::setTail(const QVector<QVector3D> &tail)
 void Player::updateTail()
 {
     _tail.push_back(_position);
+    if(_tail.count() > TAIL_LEN_MAX)
+    {
+        _tail.pop_front();
+    }
 }
 
