@@ -18,7 +18,7 @@ private:
 
     GLuint loadShader(GLenum type, const char *source);
     QVector<Player> _player;
-    QVector4D *_colorList;
+    QVector<QVector4D> _colorList;
 
     GLuint _playerPosAttr, _playerColAttr;
     GLuint _tailsPosAttr, _tailsColAttr;
@@ -36,7 +36,10 @@ private:
     QTimer *_tailTimer;
     QTimer *_physicTimer;
 
+    QVector< QVector<Qt::Key> > _controller;
+
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
     void initPlayerShaderPrograme();
     void initTailsShaderPrograme();

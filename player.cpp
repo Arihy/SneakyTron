@@ -4,18 +4,25 @@ Player::Player()
 {
 }
 
-Player::Player(QVector3D position, QVector4D color)
+Player::Player(QVector<Qt::Key> controller, QVector3D position, QVector4D color)
 {
     _position = position;
     _color = color;
     _moveSpeed = 0.01f;
-    _rotationSpeed = 10;
+    _rotationSpeed = 5;
     _direction = QVector2D(0, 1);
+    _rotateLeft = false;
+    _rotateRight = false;
+    _controller = controller;
     _angle = 0;
 }
 
 void Player::move()
 {
+    if(_rotateLeft)
+        rotateLeft();
+    if(_rotateRight)
+        rotateRight();
     _position += _direction * _moveSpeed;
 }
 
@@ -92,5 +99,33 @@ void Player::setTail(const QVector<QVector3D> &tail)
 void Player::updateTail()
 {
     _tail.push_back(_position);
+    if(_tail.count() > TAIL_LEN_MAX)
+    {
+        _tail.pop_front();
+    }
+}
+
+void Player::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == _controller[0])
+    {
+        _rotateLeft = true;
+    }
+    else if(event->key() == _controller[1])
+    {
+        _rotateRight = true;
+    }
+}
+
+void Player::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == _controller[0])
+    {
+        _rotateLeft = false;
+    }
+    else if(event->key() == _controller[1])
+    {
+        _rotateRight = false;
+    }
 }
 

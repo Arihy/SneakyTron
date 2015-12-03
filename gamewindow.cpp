@@ -4,15 +4,31 @@
 #include <QVector3D>
 #include <QVector>
 
-#define NB_PLAYER 2
+#define NB_PLAYER 4
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
-    _colorList = new QVector4D[4];
-    _colorList[0] = QVector4D(1.0, 0.2, 0.2, 1.0);
-    _colorList[1] = QVector4D(0.2, 1.0, 0.2, 1.0);
-    _colorList[2] = QVector4D(0.2, 0.2, 1.0, 1.0);
-    _colorList[3] = QVector4D(1.0, 1.0, 0.2, 1.0);
+    QVector<Qt::Key> controller;
+    controller.push_back(Qt::Key_Q);
+    controller.push_back(Qt::Key_D);
+    _controller.push_back(controller);
+    controller.clear();
+    controller.push_back(Qt::Key_Left);
+    controller.push_back(Qt::Key_Right);
+    _controller.push_back(controller);
+    controller.clear();
+    controller.push_back(Qt::Key_I);
+    controller.push_back(Qt::Key_P);
+    _controller.push_back(controller);
+    controller.clear();
+    controller.push_back(Qt::Key_F);
+    controller.push_back(Qt::Key_H);
+    _controller.push_back(controller);
+
+    _colorList.push_back(QVector4D(1.0, 0.2, 0.2, 1.0));
+    _colorList.push_back(QVector4D(0.2, 1.0, 0.2, 1.0));
+    _colorList.push_back(QVector4D(0.2, 0.2, 1.0, 1.0));
+    _colorList.push_back(QVector4D(1.0, 1.0, 0.2, 1.0));
 
     initializeGame();
 
@@ -59,10 +75,10 @@ void GameWindow::initPlayerShaderPrograme()
 
     QVector<QVector3D> position;
     QVector<QVector4D> colors;
-    for(int i = 0; i < NB_PLAYER; i++)
+    for(Player player : _player)
     {
-        position.push_back(_player[i].position());
-        colors.push_back(_player[i].color());
+        position.push_back(player.position());
+        colors.push_back(player.color());
     }
 
     size_t posSize = sizeof(QVector3D)*position.size(), colSize = sizeof(QVector4D)*colors.size();
@@ -123,7 +139,7 @@ void GameWindow::initializeGame()
     _player.clear();
     for(int i = 0; i < NB_PLAYER; i++)
     {
-        _player.push_back(Player(QVector3D(i*0.5f, -.8, 0), _colorList[i]));
+        _player.push_back(Player(_controller[i], QVector3D(i*0.5f, -.8, 0), _colorList[i]));
     }
 
     QVector<Player *> temp;
@@ -142,9 +158,9 @@ void GameWindow::initializeGame()
 
 void GameWindow::updateTails()
 {
-    for(int i = 0; i < NB_PLAYER; i++)
+    for(Player &player : _player)
     {
-        _player[i].updateTail();
+        player.updateTail();
     }
 }
 
@@ -158,9 +174,9 @@ GLuint GameWindow::loadShader(GLenum type, const char *source)
 
 void GameWindow::updateGame()
 {
-    for(int i = 0; i < NB_PLAYER; i++)
+    for(Player &player : _player)
     {
-        _player[i].move();
+        player.move();
     }
 }
 
@@ -182,75 +198,66 @@ void GameWindow::render(){
     matrix.translate(0, 0, -2);
 
     _playerProgram->setUniformValue(_matrixUniform, matrix);
-    _playerProgram->setAttributeValue(_playerPosAttr, NB_PLAYER);
-    _playerProgram->setAttributeValue(_playerColAttr, NB_PLAYER);
 
     _playerVao.bind();
     _playerVbo.bind();
+
     QVector<QVector3D> position;
-    QVector<QVector4D> colors;
-    for(int i = 0; i < NB_PLAYER; i++)
+    for(Player player : _player)
     {
-        position.push_back(_player[i].position());
-        colors.push_back(_player[i].color());
+        position.push_back(player.position());
     }
 
-    size_t posSize = sizeof(QVector3D)*position.size(), colSize = sizeof(QVector4D)*colors.size();
+    size_t posSize = sizeof(QVector3D)*position.size();
     _playerVbo.write(0, position.constData(), posSize);
-    _playerVbo.write(posSize, colors.constData(), colSize);
 
     glDrawArrays(GL_POINTS, 0, NB_PLAYER);
 
     _playerVao.release();
     _playerProgram->release();
 
-    for(int i = 0; i < NB_PLAYER; i++)
+    for(Player player : _player)
     {
         _tailsProgram->bind();
         _tailsProgram->setUniformValue(_matrixUniform, matrix);
 
-        _tailsProgram->setUniformValue(_tailsColAttr, _player[i].color());
+        _tailsProgram->setUniformValue(_tailsColAttr, player.color());
 
         _tailsVao.bind();
-
         _tailsVbo.bind();
-        size_t tailSize = _player[i].tail().size()*sizeof(QVector3D);
-        _tailsVbo.allocate(tailSize);
-        _tailsVbo.write(0, _player[i].tail().constData(), tailSize);
-        glDrawArrays(GL_LINE_STRIP, 0, _player[i].tail().size());
 
+        size_t tailSize = player.tail().size()*sizeof(QVector3D);
+        _tailsVbo.allocate(tailSize);
+        _tailsVbo.write(0, player.tail().constData(), tailSize);
+        glDrawArrays(GL_LINE_STRIP, 0, player.tail().size());
 
         _tailsVao.release();
-
         _tailsProgram->release();
     }
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
+    for(int i = 0;  i<_player.size();  i++)
+    {
+        _player[i].keyPressEvent(event);
+    }
+
     switch(event->key())
     {
     case Qt::Key_Escape:
-            close();
-            break;
+        close();
+        break;
     case Qt::Key_R:
         initializeGame();
         break;
-    case Qt::Key_Q:
-        //rotate player1 left
-        _player[0].rotateLeft();
-        break;
-    case Qt::Key_D:
-        //rotate player1 right
-        _player[0].rotateRight();
-        break;
-    case Qt::Key_Left:
-        //rotate player2 left
-        _player[1].rotateLeft();
-        break;
-    case Qt::Key_Right:
-        //rotate player2 right
-        _player[1].rotateRight();
-        break;
+    }
+}
+
+void GameWindow::keyReleaseEvent(QKeyEvent *event)
+{
+    for(Player &player : _player)
+    {
+        player.keyReleaseEvent(event);
     }
 }

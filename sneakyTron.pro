@@ -4,6 +4,7 @@ QT += core
 QMAKE_CXXFLAGS += -std=c++11
 TARGET = sneakyTron
 CONFIG -= app_bundle
+CONFIG += c++11
 INSTALLS += target
 
 TEMPLATE = app

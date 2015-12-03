@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     GameWindow window;
     window.setFormat(format);
 
-    window.resize(1024, 800);
+    window.resize(1024, 751);
     window.show();
 
     window.setAnimating(false);
