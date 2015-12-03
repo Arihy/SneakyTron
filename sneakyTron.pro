@@ -2,6 +2,7 @@ QT += core
 
 TARGET = sneakyTron
 CONFIG -= app_bundle
+CONFIG += c++11
 INSTALLS += target
 
 TEMPLATE = app
