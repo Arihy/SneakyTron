@@ -32,16 +32,13 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 
     initializeGame();
 
-
     _physicTimer = new QTimer();
     connect(_physicTimer, SIGNAL(timeout()), &myWorld, SLOT(tick()));
     _physicTimer->start(30);
 
-
     _renderTimer = new QTimer();  
     connect(_renderTimer, SIGNAL(timeout()), this, SLOT(renderNow()));
     _renderTimer->start(30);
-
 
     _tailTimer = new QTimer();
     _tailTimer->start(30);
@@ -97,7 +94,7 @@ void GameWindow::initPlayerShaderPrograme()
     _playerVbo.write(posSize, colors.constData(), colSize);
 
     _playerProgram->setAttributeBuffer(_playerPosAttr, GL_FLOAT, 0, 3, 0);
-    _playerProgram->setAttributeBuffer(_playerColAttr, GL_FLOAT, posSize, 3, 0);
+    _playerProgram->setAttributeBuffer(_playerColAttr, GL_FLOAT, posSize, 4, 0);
 
     _playerProgram->enableAttributeArray(_playerPosAttr);
     _playerProgram->enableAttributeArray(_playerColAttr);
@@ -148,12 +145,6 @@ void GameWindow::initializeGame()
     }
     myWorld.setPlayers(temp);
     myWorld.init();
-
-
-
-
-
-
 }
 
 void GameWindow::updateTails()
@@ -238,9 +229,9 @@ void GameWindow::render(){
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
-    for(int i = 0;  i<_player.size();  i++)
+    for(Player &player : _player)
     {
-        _player[i].keyPressEvent(event);
+        player.keyPressEvent(event);
     }
 
     switch(event->key())

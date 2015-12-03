@@ -23,7 +23,6 @@ void Player::computeDirection()
         rotateLeft();
     if(_rotateRight)
         rotateRight();
-
 }
 
 QVector2D Player::direction() const
