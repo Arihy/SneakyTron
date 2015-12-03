@@ -8,7 +8,7 @@ Player::Player(QVector<Qt::Key> controller, QVector3D position, QVector4D color)
 {
     _position = position;
     _color = color;
-    _moveSpeed = 0.01f;
+    _moveSpeed = 0.04f;
     _rotationSpeed = 5;
     _direction = QVector2D(0, 1);
     _rotateLeft = false;
@@ -107,7 +107,6 @@ void Player::updateTail()
 
 void Player::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<"player event";
     if(event->key() == _controller[0])
     {
         _rotateLeft = true;
