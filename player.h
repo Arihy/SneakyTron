@@ -33,7 +33,7 @@ public:
     Player();
     Player(QVector<Qt::Key>, QVector3D, QVector4D);
 
-    void move();
+    void computeDirection();
     void rotateLeft();
     void rotateRight();
     void updateTail();

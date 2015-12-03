@@ -24,11 +24,11 @@ void Physic::init(){
 
 
      // le sol
-//     b2BodyDef groundBodyDef;
-//     groundBodyDef.position.Set(0.0f, 0.0f);
-//     groundBodyDef.type = b2_staticBody;
+     b2BodyDef groundBodyDef;
+     groundBodyDef.position.Set(0.0f, 1.0f);
+     groundBodyDef.type = b2_staticBody;
 
-//     _groundBody = _world.CreateBody(&groundBodyDef);
+     _groundBody = _world.CreateBody(&groundBodyDef);
 
 //     b2Vec2 vs[4];
 //     vs[0].Set(-1.0f, -1.0f);
@@ -40,6 +40,8 @@ void Physic::init(){
 //     limit.CreateLoop(vs, 4);
 
 //     _groundBody->CreateFixture(&limit, 1.0f);
+     b2PolygonShape groundBox;
+     groundBox.SetAsBox(1.0f, 0.1f);
 
     // Création des body des joueurs
 
@@ -129,7 +131,7 @@ void Physic::tick(){
         }
 
 
-        qDebug()<<"player velocity PHYSIC"<<_playersBody[0]->GetLinearVelocity().x<<","<<_playersBody[0]->GetLinearVelocity().y;
+//        qDebug()<<"player velocity PHYSIC"<<_playersBody[0]->GetLinearVelocity().x<<","<<_playersBody[0]->GetLinearVelocity().y;
 //        qDebug()<<"player direction"<<_players[0]->direction();
 //        qDebug()<<"player direction Physic :"<<_players[0]->direction().x()<<","<<_players[0]->direction().y();
 

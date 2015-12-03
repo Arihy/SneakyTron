@@ -176,7 +176,7 @@ void GameWindow::updateGame()
 {
     for(Player &player : _player)
     {
-        player.move();
+        player.computeDirection();
     }
 }
 
@@ -189,7 +189,7 @@ void GameWindow::render(){
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
 
-    //updateGame();
+    updateGame();
 
     _playerProgram->bind();
 
