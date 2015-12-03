@@ -1,5 +1,6 @@
 #include "openglwindow.h"
 #include "gamewindow.h"
+#include "physic.h"
 #include <QtGui/QGuiApplication>
 
 
@@ -8,6 +9,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
     
+
     QSurfaceFormat format;
     format.setSamples(16);
 

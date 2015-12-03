@@ -41,6 +41,8 @@ public:
     void setColor(const QVector4D &color);
     QVector<QVector3D> tail() const;
     void setTail(const QVector<QVector3D> &tail);
+    QVector2D direction() const;
+    void setDirection(const QVector2D &direction);
 };
 
 #endif // PLAYER_H

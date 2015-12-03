@@ -19,6 +19,16 @@ void Player::move()
     _position += _direction * _moveSpeed;
 }
 
+QVector2D Player::direction() const
+{
+    return _direction;
+}
+
+void Player::setDirection(const QVector2D &direction)
+{
+    _direction = direction;
+}
+
 void Player::rotate()
 {
     float angle = (_angle * PI) / 180.0;

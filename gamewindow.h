@@ -7,12 +7,15 @@
 
 #include "openglwindow.h"
 #include "player.h"
+#include "physic.h"
 
 
 class GameWindow : public OpenGLWindow
 {
     Q_OBJECT
 private:
+    Physic myWorld;
+
     GLuint loadShader(GLenum type, const char *source);
     QVector<Player> _player;
     QVector4D *_colorList;
@@ -31,6 +34,7 @@ private:
 
     QTimer *_renderTimer;
     QTimer *_tailTimer;
+    QTimer *_physicTimer;
 
     void keyPressEvent(QKeyEvent *event);
 

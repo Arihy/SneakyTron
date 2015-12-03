@@ -16,9 +16,16 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 
     initializeGame();
 
-    _renderTimer = new QTimer();
-    _renderTimer->start(30);
+
+    _physicTimer = new QTimer();
+    connect(_physicTimer, SIGNAL(timeout()), &myWorld, SLOT(tick()));
+    _physicTimer->start(30);
+
+
+    _renderTimer = new QTimer();  
     connect(_renderTimer, SIGNAL(timeout()), this, SLOT(renderNow()));
+    _renderTimer->start(30);
+
 
     _tailTimer = new QTimer();
     _tailTimer->start(30);
@@ -118,6 +125,19 @@ void GameWindow::initializeGame()
     {
         _player.push_back(Player(QVector3D(i*0.5f, -.8, 0), _colorList[i]));
     }
+
+    QVector<Player *> temp;
+    for (int i=0 ;i <_player.size();i++){
+        temp<< &_player[i];
+    }
+    myWorld.setPlayers(temp);
+    myWorld.init();
+
+
+
+
+
+
 }
 
 void GameWindow::updateTails()
@@ -153,7 +173,7 @@ void GameWindow::render(){
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
 
-    updateGame();
+    //updateGame();
 
     _playerProgram->bind();
 
