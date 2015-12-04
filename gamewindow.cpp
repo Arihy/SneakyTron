@@ -139,7 +139,7 @@ void GameWindow::initializeGame()
     _player.clear();
     for(int i = 0; i < NB_PLAYER; i++)
     {
-        _player.push_back(Player(_controller[i], QVector3D(i*0.5f, -.8, 0), _colorList[i]));
+        _player.push_back(Player(_controller[i], QVector3D(-0.8+(1.6/(NB_PLAYER+1))*(i), -.7, 0), _colorList[i]));
     }
 
     QVector<Player *> temp;
@@ -189,7 +189,6 @@ void GameWindow::render(){
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
 
-    updateGame();
 
     _playerProgram->bind();
 

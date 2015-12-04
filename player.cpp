@@ -107,7 +107,6 @@ void Player::updateTail()
 
 void Player::keyPressEvent(QKeyEvent *event)
 {
-    qDebug()<<"player event";
     if(event->key() == _controller[0])
     {
         _rotateLeft = true;

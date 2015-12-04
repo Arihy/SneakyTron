@@ -13,7 +13,7 @@ class Physic : public QObject
     Q_OBJECT
 private :
     b2World _world;
-    b2Body* _groundBody;
+    b2Body* _groundBody[4];
     QVector<Player *> _players;
     QVector<b2Body *> _playersBody;
 public:
@@ -21,7 +21,9 @@ public:
     Physic(QVector<Player *> listPlayer);
 
     void init();
-    void gameLoop();
+    void initGround();
+    void initPlayer();
+    void updateDirection();
 
 
 
