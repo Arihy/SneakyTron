@@ -21,6 +21,7 @@ Physic::Physic(QVector<Player *> listPlayer):_world(b2Vec2(0.0f, 0.0f))
 }
 
 void Physic::init(){
+    _world.SetContactListener(&myColliderInstance);
     initGround();
     initPlayer();
 }

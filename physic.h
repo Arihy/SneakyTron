@@ -6,6 +6,8 @@
 #include <QThread>
 #include <player.h>
 #include <Box2D/Box2D.h>
+#include "colliderclass.h"
+
 
 
 class Physic : public QObject
@@ -16,6 +18,7 @@ private :
     b2Body* _groundBody[4];
     QVector<Player *> _players;
     QVector<b2Body *> _playersBody;
+    ColliderClass myColliderInstance;
 public:
     Physic();
     Physic(QVector<Player *> listPlayer);

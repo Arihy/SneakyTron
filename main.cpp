@@ -8,7 +8,8 @@ int main(int argc, char *argv[])
 {
 
     QGuiApplication app(argc, argv);
-    
+    //at global scope
+
 
     QSurfaceFormat format;
     format.setSamples(16);
