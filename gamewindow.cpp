@@ -4,7 +4,7 @@
 #include <QVector3D>
 #include <QVector>
 
-#define NB_PLAYER 4
+#define NB_PLAYER 2
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
@@ -16,14 +16,14 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     controller.push_back(Qt::Key_Left);
     controller.push_back(Qt::Key_Right);
     _controller.push_back(controller);
-    controller.clear();
-    controller.push_back(Qt::Key_I);
-    controller.push_back(Qt::Key_P);
-    _controller.push_back(controller);
-    controller.clear();
-    controller.push_back(Qt::Key_F);
-    controller.push_back(Qt::Key_H);
-    _controller.push_back(controller);
+//    controller.clear();
+//    controller.push_back(Qt::Key_I);
+//    controller.push_back(Qt::Key_P);
+//    _controller.push_back(controller);
+//    controller.clear();
+//    controller.push_back(Qt::Key_F);
+//    controller.push_back(Qt::Key_H);
+//    _controller.push_back(controller);
 
     _colorList.push_back(QVector4D(1.0, 0.2, 0.2, 1.0));
     _colorList.push_back(QVector4D(0.2, 1.0, 0.2, 1.0));
@@ -32,16 +32,13 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 
     initializeGame();
 
-
     _physicTimer = new QTimer();
     connect(_physicTimer, SIGNAL(timeout()), &myWorld, SLOT(tick()));
     _physicTimer->start(30);
 
-
     _renderTimer = new QTimer();  
     connect(_renderTimer, SIGNAL(timeout()), this, SLOT(renderNow()));
     _renderTimer->start(30);
-
 
     _tailTimer = new QTimer();
     _tailTimer->start(30);
@@ -97,7 +94,7 @@ void GameWindow::initPlayerShaderPrograme()
     _playerVbo.write(posSize, colors.constData(), colSize);
 
     _playerProgram->setAttributeBuffer(_playerPosAttr, GL_FLOAT, 0, 3, 0);
-    _playerProgram->setAttributeBuffer(_playerColAttr, GL_FLOAT, posSize, 3, 0);
+    _playerProgram->setAttributeBuffer(_playerColAttr, GL_FLOAT, posSize, 4, 0);
 
     _playerProgram->enableAttributeArray(_playerPosAttr);
     _playerProgram->enableAttributeArray(_playerColAttr);
@@ -139,7 +136,7 @@ void GameWindow::initializeGame()
     _player.clear();
     for(int i = 0; i < NB_PLAYER; i++)
     {
-        _player.push_back(Player(_controller[i], QVector3D(-0.8+(1.6/(NB_PLAYER+1))*(i), -.7, 0), _colorList[i]));
+        _player.push_back(Player(i + 1,_controller[i], QVector3D(-0.8+(1.6/(NB_PLAYER+1))*(i), -.7, 0), _colorList[i]));
     }
 
     QVector<Player *> temp;
@@ -148,12 +145,6 @@ void GameWindow::initializeGame()
     }
     myWorld.setPlayers(temp);
     myWorld.init();
-
-
-
-
-
-
 }
 
 void GameWindow::updateTails()
@@ -237,9 +228,9 @@ void GameWindow::render(){
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
-    for(int i = 0;  i<_player.size();  i++)
+    for(Player &player : _player)
     {
-        _player[i].keyPressEvent(event);
+        player.keyPressEvent(event);
     }
 
     switch(event->key())

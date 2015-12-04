@@ -4,11 +4,12 @@ Player::Player()
 {
 }
 
-Player::Player(QVector<Qt::Key> controller, QVector3D position, QVector4D color)
+Player::Player(int num, QVector<Qt::Key> controller, QVector3D position, QVector4D color)
 {
+    _id = num;
     _position = position;
     _color = color;
-    _moveSpeed = 0.01f;
+    _moveSpeed = 0.04f;
     _rotationSpeed = 5;
     _direction = QVector2D(0, 1);
     _rotateLeft = false;
@@ -17,13 +18,17 @@ Player::Player(QVector<Qt::Key> controller, QVector3D position, QVector4D color)
     _angle = 0;
 }
 
+int Player::getId()
+{
+    return _id;
+}
+
 void Player::computeDirection()
 {
     if(_rotateLeft)
         rotateLeft();
     if(_rotateRight)
         rotateRight();
-
 }
 
 QVector2D Player::direction() const

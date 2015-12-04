@@ -71,7 +71,6 @@ void Physic::initPlayer()
      for (int i=0 ;i <_players.size();i++){
          b2BodyDef playerBodyDef;
          playerBodyDef.type = b2_dynamicBody;
-         qDebug()<<"joueur"<<i<<":"<<_players[i]->position().x() <<","<<_players[i]->position().y();
 
          playerBodyDef.position.Set( _players[i]->position().x()  ,_players[i]->position().y());
 
