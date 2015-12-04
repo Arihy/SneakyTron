@@ -4,7 +4,7 @@
 #include <QVector3D>
 #include <QVector>
 
-#define NB_PLAYER 4
+#define NB_PLAYER 2
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
@@ -16,14 +16,14 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     controller.push_back(Qt::Key_Left);
     controller.push_back(Qt::Key_Right);
     _controller.push_back(controller);
-    controller.clear();
-    controller.push_back(Qt::Key_I);
-    controller.push_back(Qt::Key_P);
-    _controller.push_back(controller);
-    controller.clear();
-    controller.push_back(Qt::Key_F);
-    controller.push_back(Qt::Key_H);
-    _controller.push_back(controller);
+//    controller.clear();
+//    controller.push_back(Qt::Key_I);
+//    controller.push_back(Qt::Key_P);
+//    _controller.push_back(controller);
+//    controller.clear();
+//    controller.push_back(Qt::Key_F);
+//    controller.push_back(Qt::Key_H);
+//    _controller.push_back(controller);
 
     _colorList.push_back(QVector4D(1.0, 0.2, 0.2, 1.0));
     _colorList.push_back(QVector4D(0.2, 1.0, 0.2, 1.0));
@@ -136,7 +136,7 @@ void GameWindow::initializeGame()
     _player.clear();
     for(int i = 0; i < NB_PLAYER; i++)
     {
-        _player.push_back(Player(_controller[i], QVector3D(i*0.5f, -.8, 0), _colorList[i]));
+        _player.push_back(Player(i + 1, _controller[i], QVector3D(i*0.5f, -.8, 0), _colorList[i]));
     }
 
     QVector<Player *> temp;

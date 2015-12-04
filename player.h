@@ -15,6 +15,7 @@
 class Player
 {
 private:
+    int _id;
     QVector3D _position;
     float _moveSpeed;
     float _rotationSpeed;
@@ -31,7 +32,9 @@ private:
 
 public:
     Player();
-    Player(QVector<Qt::Key>, QVector3D, QVector4D);
+    Player(int, QVector<Qt::Key>, QVector3D, QVector4D);
+
+    int getId();
 
     void computeDirection();
     void rotateLeft();

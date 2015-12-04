@@ -59,7 +59,8 @@ SOURCES += main.cpp \
     Box2D/Dynamics/b2Island.cpp \
     Box2D/Dynamics/b2World.cpp \
     Box2D/Dynamics/b2WorldCallbacks.cpp \
-    Box2D/Rope/b2Rope.cpp
+    Box2D/Rope/b2Rope.cpp \
+    bonus.cpp
 
 HEADERS  += \
     openglwindow.h \
@@ -112,7 +113,8 @@ HEADERS  += \
     Box2D/Dynamics/b2World.h \
     Box2D/Dynamics/b2WorldCallbacks.h \
     Box2D/Rope/b2Rope.h \
-    Box2D/Box2D.h
+    Box2D/Box2D.h \
+    bonus.h
 
 
 RESOURCES += gestionnaire.qrc
