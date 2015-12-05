@@ -17,7 +17,7 @@ class Physic : public QObject
 private :
     b2World _world;
     QVector<Border *> _borders;
-    b2Body* _borderBody[4];
+    b2Body* _borderBody[NB_BOUNDARY];
     QVector<Player *> _players;
     QVector<b2Body *> _playersBody;   
     ColliderClass myColliderInstance;

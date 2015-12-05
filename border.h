@@ -4,6 +4,8 @@
 #include "entity.h"
 #include <QVector2D>
 
+#define NB_BOUNDARY 4
+
 class Border : public Entity
 {
 public:
