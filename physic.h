@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QThread>
 #include <player.h>
+#include <border.h>
 #include <Box2D/Box2D.h>
 #include "colliderclass.h"
 
@@ -15,16 +16,17 @@ class Physic : public QObject
     Q_OBJECT
 private :
     b2World _world;
-    b2Body* _groundBody[4];
+    QVector<Border *> _borders;
+    b2Body* _borderBody[4];
     QVector<Player *> _players;
-    QVector<b2Body *> _playersBody;
+    QVector<b2Body *> _playersBody;   
     ColliderClass myColliderInstance;
 public:
     Physic();
     Physic(QVector<Player *> listPlayer);
 
     void init();
-    void initGround();
+    void initBorder();
     void initPlayer();
     void updateDirection();
 
@@ -32,6 +34,9 @@ public:
 
     QVector<Player *> players() const;
     void setPlayers(const QVector<Player *> &players);
+    QVector<Border *> borders() const;
+    void setBorders(const QVector<Border *> &borders);
+
 public slots:
     void tick();
 };

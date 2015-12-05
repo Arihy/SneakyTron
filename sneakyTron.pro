@@ -60,7 +60,9 @@ SOURCES += main.cpp \
     Box2D/Dynamics/b2World.cpp \
     Box2D/Dynamics/b2WorldCallbacks.cpp \
     Box2D/Rope/b2Rope.cpp \
-    colliderclass.cpp
+    colliderclass.cpp \
+    entity.cpp \
+    border.cpp
 
 
 HEADERS  += \
@@ -115,7 +117,9 @@ HEADERS  += \
     Box2D/Dynamics/b2WorldCallbacks.h \
     Box2D/Rope/b2Rope.h \
     Box2D/Box2D.h \
-    colliderclass.h
+    colliderclass.h \
+    entity.h \
+    border.h
 
 
 RESOURCES += gestionnaire.qrc

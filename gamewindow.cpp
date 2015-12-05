@@ -5,6 +5,7 @@
 #include <QVector>
 
 #define NB_PLAYER 2
+#define HALF_DIM_BOARD 1
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
@@ -136,13 +137,21 @@ void GameWindow::initializeGame()
     _player.clear();
     for(int i = 0; i < NB_PLAYER; i++)
     {
-        _player.push_back(Player(i + 1,_controller[i], QVector3D(-0.8+(1.6/(NB_PLAYER+1))*(i), -.7, 0), _colorList[i]));
+        _player.push_back(Player(i + 1,_controller[i], QVector3D((-HALF_DIM_BOARD+0.2)+((2*HALF_DIM_BOARD-0.4)/(NB_PLAYER+1))*(i), -HALF_DIM_BOARD+0.3, 0), _colorList[i]));
     }
 
     QVector<Player *> temp;
     for (int i=0 ;i <_player.size();i++){
         temp<< &_player[i];
     }
+
+    _border.clear();
+    _border.push_back(new Border(QVector2D(HALF_DIM_BOARD,0.0f), QVector2D(0.1f,HALF_DIM_BOARD)));
+    _border.push_back(new Border(QVector2D(0.0f,HALF_DIM_BOARD), QVector2D(HALF_DIM_BOARD,0.1f)));
+    _border.push_back(new Border(QVector2D(-HALF_DIM_BOARD,0.0f), QVector2D(0.1f,HALF_DIM_BOARD)));
+    _border.push_back(new Border(QVector2D(0.0f,-HALF_DIM_BOARD), QVector2D(HALF_DIM_BOARD,0.1f)));
+
+    myWorld.setBorders(_border);
     myWorld.setPlayers(temp);
     myWorld.init();
 }
@@ -176,7 +185,7 @@ void GameWindow::render(){
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
     glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    //glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
 
@@ -200,7 +209,7 @@ void GameWindow::render(){
 
     size_t posSize = sizeof(QVector3D)*position.size();
     _playerVbo.write(0, position.constData(), posSize);
-
+    glPointSize(10);
     glDrawArrays(GL_POINTS, 0, NB_PLAYER);
 
     _playerVao.release();
@@ -219,6 +228,7 @@ void GameWindow::render(){
         size_t tailSize = player.tail().size()*sizeof(QVector3D);
         _tailsVbo.allocate(tailSize);
         _tailsVbo.write(0, player.tail().constData(), tailSize);
+        glPointSize(1);
         glDrawArrays(GL_LINE_STRIP, 0, player.tail().size());
 
         _tailsVao.release();

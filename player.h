@@ -8,11 +8,12 @@
 #include <math.h>
 #include <QDebug>
 #include <QKeyEvent>
+#include "entity.h"
 
 #define PI 3.14159265
 #define TAIL_LEN_MAX 100
 
-class Player
+class Player : public Entity
 {
 private:
     int _id;
@@ -34,12 +35,13 @@ public:
     Player();
     Player(int, QVector<Qt::Key>, QVector3D, QVector4D);
 
-    int getId();
+    EntityType getEntityType() override;
 
     void computeDirection();
     void rotateLeft();
     void rotateRight();
     void updateTail();
+
 
     //GETTER & SETTER
     QVector3D position() const;
@@ -52,7 +54,7 @@ public:
     void setTail(const QVector<QVector3D> &tail);
     QVector2D direction() const;
     void setDirection(const QVector2D &direction);
-
+    int getId();
 
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);

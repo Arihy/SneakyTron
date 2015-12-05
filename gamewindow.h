@@ -7,6 +7,7 @@
 
 #include "openglwindow.h"
 #include "player.h"
+#include "border.h"
 #include "physic.h"
 
 
@@ -18,6 +19,7 @@ private:
 
     GLuint loadShader(GLenum type, const char *source);
     QVector<Player> _player;
+    QVector<Border*> _border;
     QVector<QVector4D> _colorList;
 
     GLuint _playerPosAttr, _playerColAttr;

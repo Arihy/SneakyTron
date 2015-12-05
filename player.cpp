@@ -18,6 +18,11 @@ Player::Player(int num, QVector<Qt::Key> controller, QVector3D position, QVector
     _angle = 0;
 }
 
+EntityType Player::getEntityType()
+{
+    return PLAYER;
+}
+
 int Player::getId()
 {
     return _id;
