@@ -227,7 +227,7 @@ void GameWindow::render(){
 
         size_t tailSize = player.tail().size()*sizeof(QVector3D);
         _tailsVbo.allocate(tailSize);
-        _tailsVbo.write(0, player.tail().constData(), tailSize);
+        _tailsVbo.write(0, player.tail().getChain().constData(), tailSize);
         glPointSize(1);
         glDrawArrays(GL_LINE_STRIP, 0, player.tail().size());
 

@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <QKeyEvent>
 #include "entity.h"
+#include "tail.h"
 
 #define PI 3.14159265
 #define TAIL_LEN_MAX 100
@@ -21,7 +22,7 @@ private:
     float _moveSpeed;
     float _rotationSpeed;
     QVector4D _color;
-    QVector<QVector3D> _tail;
+    Tail _tail;
     QVector2D _direction;
     bool _rotateLeft;
     bool _rotateRight;
@@ -50,8 +51,8 @@ public:
     void setMoveSpeed(float moveSpeed);
     QVector4D color() const;
     void setColor(const QVector4D &color);
-    QVector<QVector3D> tail() const;
-    void setTail(const QVector<QVector3D> &tail);
+    Tail tail() const;
+    void setTail(const Tail &tail);
     QVector2D direction() const;
     void setDirection(const QVector2D &direction);
     int getId();

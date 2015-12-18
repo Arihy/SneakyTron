@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-enum EntityType {PLAYER = 1, BORDER =2, BONUS = 3};
+enum EntityType {PLAYER = 1, BORDER =2, TAIL=3, BONUS = 4};
 
 class Entity
 {

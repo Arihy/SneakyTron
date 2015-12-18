@@ -62,7 +62,8 @@ SOURCES += main.cpp \
     Box2D/Rope/b2Rope.cpp \
     colliderclass.cpp \
     entity.cpp \
-    border.cpp
+    border.cpp \
+    tail.cpp
 
 
 HEADERS  += \
@@ -119,7 +120,8 @@ HEADERS  += \
     Box2D/Box2D.h \
     colliderclass.h \
     entity.h \
-    border.h
+    border.h \
+    tail.h
 
 
 RESOURCES += gestionnaire.qrc

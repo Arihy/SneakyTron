@@ -96,23 +96,19 @@ void Player::setColor(const QVector4D &color)
     _color = color;
 }
 
-QVector<QVector3D> Player::tail() const
+Tail Player::tail() const
 {
     return _tail;
 }
 
-void Player::setTail(const QVector<QVector3D> &tail)
+void Player::setTail(const Tail &tail)
 {
     _tail = tail;
 }
 
 void Player::updateTail()
 {
-    _tail.push_back(_position);
-    if(_tail.count() > TAIL_LEN_MAX)
-    {
-        _tail.pop_front();
-    }
+    _tail.add(_position);
 }
 
 void Player::keyPressEvent(QKeyEvent *event)
