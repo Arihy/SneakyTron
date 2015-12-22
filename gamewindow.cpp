@@ -4,8 +4,8 @@
 #include <QVector3D>
 #include <QVector>
 
-#define NB_PLAYER 2
-#define HALF_DIM_BOARD 1
+static const int NB_PLAYER = 2;
+static const int HALF_DIM_BOARD = 1;
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {

@@ -11,8 +11,9 @@
 #include "entity.h"
 #include "tail.h"
 
-#define PI 3.14159265
-#define TAIL_LEN_MAX 100
+static const float PI = 3.14159265;
+
+static const int TAIL_LEN_MAX = 100;
 
 class Player : public Entity
 {
