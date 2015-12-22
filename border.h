@@ -4,7 +4,7 @@
 #include "entity.h"
 #include <QVector2D>
 
-#define NB_BOUNDARY 4
+static const int NB_BOUNDARY = 4;
 
 class Border : public Entity
 {
