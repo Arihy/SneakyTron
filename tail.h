@@ -5,7 +5,7 @@
 #include <QVector3D>
 #include "entity.h"
 
-static int NB_POINTS_INIT=100;
+static const int NB_POINTS_INIT=100;
 
 class Tail : public Entity
 {

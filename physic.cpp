@@ -34,73 +34,101 @@ void Physic::init(){
     _world.SetContactListener(&myColliderInstance);
     initBorder();
     initPlayer();
+    //initTail();
 }
 
 void Physic::initBorder()
 {
-    b2BodyDef borderBodyDef[NB_BOUNDARY];
-    b2PolygonShape borderBox[NB_BOUNDARY];
+    b2BodyDef borderBodyDef;
+    b2PolygonShape borderBox;
     for (int i=0; i<_borders.size();i++)
     {
-        borderBodyDef[i].position.Set(_borders[i]->position().x(), _borders[i]->position().y());
-        borderBodyDef[i].type = b2_staticBody;
-        _borderBody[i] = _world.CreateBody(&borderBodyDef[i]);
-        borderBox[i].SetAsBox(_borders[i]->dimension().x(), _borders[i]->dimension().y());
-        qDebug()<<"position : "<<_borders[i]->position()<<" hald-dim : "<<_borders[i]->dimension();
-        _borderBody[i]->CreateFixture(&borderBox[i], 1.0f);
+        borderBodyDef.position.Set(_borders[i]->position().x(), _borders[i]->position().y());
+        borderBodyDef.type = b2_staticBody;
+        _borderBody[i] = _world.CreateBody(&borderBodyDef);
+        borderBox.SetAsBox(_borders[i]->dimension().x(), _borders[i]->dimension().y());
+        qDebug()<<"position  : "<<_borders[i]->position()<<" hald-dim : "<<_borders[i]->dimension();
+        _borderBody[i]->CreateFixture(&borderBox, 1.0f);
         _borderBody[i]->SetUserData(_borders[i]);
     }
-
-//    borderBodyDef[0].position.Set(0.0f, 1.0f);
-//    borderBodyDef[0].type = b2_staticBody;
-//    _borderBody[0] = _world.CreateBody(&borderBodyDef[1]);
-//    borderBox[0].SetAsBox(1.0f, 0.1f);
-//    _borderBody[0]->CreateFixture(&borderBox[0], 1.0f);
-
-//    borderBodyDef[1].position.Set(1.0f, 0.0f);
-//    borderBodyDef[1].type = b2_staticBody;
-//    _borderBody[1] = _world.CreateBody(&borderBodyDef[1]);
-//    borderBox[1].SetAsBox(0.1f, 1.0f);
-//    _borderBody[1]->CreateFixture(&borderBox[1], 1.0f);
-
-//    borderBodyDef[2].position.Set(0.0f, -1.0f);
-//    borderBodyDef[2].type = b2_staticBody;
-//    _borderBody[2] = _world.CreateBody(&borderBodyDef[2]);
-//    borderBox[2].SetAsBox(1.0f, 0.1f);
-//    _borderBody[2]->CreateFixture(&borderBox[2], 1.0f);
-
-//    borderBodyDef[3].position.Set(-1.0f, 0.0f);
-//    borderBodyDef[3].type = b2_staticBody;
-//    _borderBody[3] = _world.CreateBody(&borderBodyDef[3]);
-//    borderBox[3].SetAsBox(0.1f, 1.0f);
-//    _borderBody[3]->CreateFixture(&borderBox[3], 1.0f);
 }
 
 void Physic::initPlayer()
 {
     b2CircleShape playerShape;
     playerShape.m_p.Set(0, 0); //position, relative to body position
-    playerShape.m_radius = 0.01; // radius
+    playerShape.m_radius = PLAYER_RADIUS; // radius
 
     b2FixtureDef playerFixtureDef;
     playerFixtureDef.shape=&playerShape;
     playerFixtureDef.density=0;
 
+    b2BodyDef playerBodyDef;
+    playerBodyDef.type = b2_dynamicBody;
+
     _playersBody.clear();
     for (int i=0 ;i <_players.size();i++)
     {
-        b2BodyDef playerBodyDef;
-        playerBodyDef.type = b2_dynamicBody;
-
         playerBodyDef.position.Set( _players[i]->position().x()  ,_players[i]->position().y());
-
         _playersBody<<_world.CreateBody(&playerBodyDef);
         _playersBody[i]->CreateFixture(&playerFixtureDef);
         _playersBody[i]->SetUserData( _players[i]); // Bind du body avec l'objet player
     }
-    qDebug()<<(static_cast<Entity*>(_playersBody[1]->GetUserData())->getEntityType() == PLAYER);
 }
 
+
+void Physic::initTail(){
+    b2BodyDef tailBodyDef;
+    tailBodyDef.type = b2_staticBody;
+    b2ChainShape tailLine;
+    QVector< b2Vec2> vec;
+    for(Player* player : _players)
+    {
+        vec.clear();
+        vec.push_back(b2Vec2(player->position().x(), player->position().y()));
+        vec.push_back(b2Vec2(player->position().x(), player->position().y()-PLAYER_RADIUS));
+//        for (const QVector3D v : player->tail()->getChain())
+//            vec.push_back(b2Vec2(v.x(),v.y()));
+        tailLine.CreateChain(vec.constData(),(int32) vec.size());
+        _tailsBody<<_world.CreateBody(&tailBodyDef);
+        _tailsBody.last()->CreateFixture(&tailLine,1.0f);
+        _tailsBody.last()->SetUserData(player->tail());
+    }
+
+
+
+
+    //vec.clear();
+//    for (int i =0;i<2;i++)
+//        vec.push_back(b2Vec2(1.0*i, 0.0f));
+
+//    tailLine.CreateChain(vec.constData(),(int32) vec.size());
+//    _tailsBody<<_world.CreateBody(&tailBodyDef);
+//    _tailsBody.last()->CreateFixture(&tailLine,1.0f);
+//    b2ChainShape *chainShape = (b2ChainShape*) _tailsBody.last()->GetFixtureList()[0].GetShape();
+//    qDebug()<<"body created";
+//    for (int i = 0;i<2;i++)
+//        qDebug()<<"vertice "<<i<<" x : "<<chainShape->m_vertices[i].x<<" , y : "<<chainShape->m_vertices[i].y;
+//    _tailsBody.last()->SetUserData(_players[0]->tail());
+}
+void Physic::updateTail()
+{
+    b2BodyDef tailBodyDef;
+    tailBodyDef.type = b2_staticBody;
+    b2ChainShape tailLine;
+    QVector< b2Vec2> vec;
+    for(Player* player : _players)
+    {
+        vec.clear();
+        vec.push_back(b2Vec2(player->position().x(), player->position().y()));
+        for (const QVector3D v : player->tail()->getChain())
+            vec.push_back(b2Vec2(v.x(),v.y()));
+        tailLine.CreateChain(vec.constData(),(int32) vec.size());
+        _tailsBody<<_world.CreateBody(&tailBodyDef);
+        _tailsBody.last()->CreateFixture(&tailLine,1.0f);
+    }
+    qDebug()<<_tailsBody.last()->GetFixtureList()[0].GetShape()->m_type;
+}
 
 void Physic::updateDirection()
 {
@@ -130,4 +158,5 @@ void Physic::tick()
         b2Vec2 position = _playersBody[i]->GetPosition();
         _players[i]->setPosition(QVector3D(position.x, position.y, 0));
     }
+
 }

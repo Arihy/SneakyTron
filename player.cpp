@@ -96,9 +96,9 @@ void Player::setColor(const QVector4D &color)
     _color = color;
 }
 
-Tail Player::tail() const
+Tail* Player::tail()
 {
-    return _tail;
+    return &_tail;
 }
 
 void Player::setTail(const Tail &tail)

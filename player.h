@@ -12,7 +12,7 @@
 #include "tail.h"
 
 #define PI 3.14159265
-#define TAIL_LEN_MAX 100
+
 
 class Player : public Entity
 {
@@ -51,7 +51,7 @@ public:
     void setMoveSpeed(float moveSpeed);
     QVector4D color() const;
     void setColor(const QVector4D &color);
-    Tail tail() const;
+    Tail *tail();
     void setTail(const Tail &tail);
     QVector2D direction() const;
     void setDirection(const QVector2D &direction);

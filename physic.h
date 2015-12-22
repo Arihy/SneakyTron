@@ -9,7 +9,7 @@
 #include <Box2D/Box2D.h>
 #include "colliderclass.h"
 
-
+const float PLAYER_RADIUS=0.01;
 
 class Physic : public QObject
 {
@@ -19,7 +19,8 @@ private :
     QVector<Border *> _borders;
     b2Body* _borderBody[NB_BOUNDARY];
     QVector<Player *> _players;
-    QVector<b2Body *> _playersBody;   
+    QVector<b2Body *> _playersBody;
+    QVector<b2Body *> _tailsBody;
     ColliderClass myColliderInstance;
 public:
     Physic();
@@ -28,6 +29,8 @@ public:
     void init();
     void initBorder();
     void initPlayer();
+    void initTail();
+    void updateTail();
     void updateDirection();
 
 
