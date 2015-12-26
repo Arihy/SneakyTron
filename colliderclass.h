@@ -11,6 +11,7 @@ public:
     ColliderClass();
 
     virtual void BeginContact(b2Contact *contact) override;
+    void CheckPlayerCollideBorder(Entity *bodyUserAData, Entity *bodyUserBData);
 };
 
 #endif // COLLIDERCLASS_H
