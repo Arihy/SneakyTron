@@ -27,7 +27,11 @@ int Tail::size()
 
 void Tail::add(QVector3D chain)
 {
-    _chain.push_back(chain);
+    // On ajoute un point à la chaine uniquement si il est "significativement distant" du précédent
+    // Sinon, la physique crash : on ne peut pas avoir deux points plus proche que 0.005*0.005
+    if (_chain.size()==0) _chain.push_back(chain);
+    else if (chain.distanceToPoint(_chain.last())>0.006*0.006) _chain.push_back(chain);
+
     if (_chain.size()>_nbChain) _chain.removeFirst();
 }
 
