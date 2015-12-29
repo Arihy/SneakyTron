@@ -158,6 +158,7 @@ void GameWindow::initializeGame()
     myWorld.setBorders(_border);
     myWorld.setPlayers(temp);
     myWorld.init();
+    connect(myWorld.getMyColliderInstance(),SIGNAL(helloGameWindow()),this,SLOT(helloFromGameWindow()));
 }
 
 void GameWindow::updateTails()
@@ -166,6 +167,11 @@ void GameWindow::updateTails()
     {
         player.updateTail();
     }
+}
+
+void GameWindow::helloFromGameWindow()
+{
+    qDebug()<<"hello from gamewindow";
 }
 
 GLuint GameWindow::loadShader(GLenum type, const char *source)

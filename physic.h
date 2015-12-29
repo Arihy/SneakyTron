@@ -40,6 +40,8 @@ public:
     QVector<Border *> borders() const;
     void setBorders(const QVector<Border *> &borders);
 
+    ColliderClass* getMyColliderInstance();
+
 public slots:
     void tick();
 };

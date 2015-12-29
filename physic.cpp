@@ -20,6 +20,11 @@ void Physic::setBorders(const QVector<Border *> &borders)
     _borders = borders;
 }
 
+ColliderClass* Physic::getMyColliderInstance()
+{
+    return &myColliderInstance;
+}
+
 Physic::Physic():_world(b2Vec2(0.0f, 0.0f))
 {
 

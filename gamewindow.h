@@ -58,6 +58,7 @@ public:
 
 public slots:
     void updateTails();
+    void helloFromGameWindow();
 };
 
 #endif // GAMEWINDOW_H

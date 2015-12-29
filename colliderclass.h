@@ -5,13 +5,17 @@
 #include <QDebug>
 #include "player.h"
 
-class ColliderClass : public b2ContactListener
+class ColliderClass : public QObject, public b2ContactListener
 {
+Q_OBJECT
 public:
     ColliderClass();
 
     virtual void BeginContact(b2Contact *contact) override;
     void CheckPlayerCollideBorder(Entity *bodyUserAData, Entity *bodyUserBData);
+
+signals:
+    void helloGameWindow();
 };
 
 #endif // COLLIDERCLASS_H
