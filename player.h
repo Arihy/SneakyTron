@@ -5,14 +5,11 @@
 #include <QVector3D>
 #include <QVector4D>
 #include <QVector>
-#include <math.h>
 #include <QDebug>
 #include <QKeyEvent>
 #include "entity.h"
 #include "tail.h"
-
-
-static const float PI = 3.14159265;
+#include "utils.h"
 
 static const int TAIL_LEN_MAX = 100;
 

@@ -9,6 +9,7 @@
 #include "player.h"
 #include "border.h"
 #include "physic.h"
+#include "particles.h"
 
 
 class GameWindow : public OpenGLWindow
@@ -21,6 +22,7 @@ private:
     QVector<Player> _player;
     QVector<Border*> _border;
     QVector<QVector4D> _colorList;
+    QVector<Particles> _particlesSystem;
 
     GLuint _playerPosAttr, _playerColAttr;
     GLuint _tailsPosAttr, _tailsColAttr;

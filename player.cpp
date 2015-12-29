@@ -48,10 +48,7 @@ void Player::setDirection(const QVector2D &direction)
 
 void Player::rotate()
 {
-    float angle = (_angle * PI) / 180.0;
-    QVector2D direction = _direction;
-    _direction.setX((direction.x() * cos(angle)) - (direction.y() * sin(angle)));
-    _direction.setY((direction.x() * sin(angle)) + (direction.y() * cos(angle)));
+    Utils::computeDirection(_angle, _direction);
 }
 
 void Player::rotateRight()

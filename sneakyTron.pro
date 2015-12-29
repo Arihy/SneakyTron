@@ -63,7 +63,10 @@ SOURCES += main.cpp \
     colliderclass.cpp \
     entity.cpp \
     border.cpp \
-    tail.cpp
+    tail.cpp \
+    particle.cpp \
+    particles.cpp \
+    utils.cpp
 
 
 HEADERS  += \
@@ -121,7 +124,10 @@ HEADERS  += \
     colliderclass.h \
     entity.h \
     border.h \
-    tail.h
+    tail.h \
+    particle.h \
+    particles.h \
+    utils.h
 
 
 RESOURCES += gestionnaire.qrc

@@ -28,8 +28,12 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 
     _colorList.push_back(QVector4D(1.0, 0.2, 0.2, 1.0));
     _colorList.push_back(QVector4D(0.2, 1.0, 0.2, 1.0));
-    _colorList.push_back(QVector4D(0.2, 0.2, 1.0, 1.0));
-    _colorList.push_back(QVector4D(1.0, 1.0, 0.2, 1.0));
+
+    _particlesSystem.push_back(Particles(QVector4D(1.0, 0.2, 0.2, 1.0)));
+    _particlesSystem.push_back(Particles(QVector4D(0.2, 1.0, 0.2, 1.0)));
+
+//    _colorList.push_back(QVector4D(0.2, 0.2, 1.0, 1.0));
+//    _colorList.push_back(QVector4D(1.0, 1.0, 0.2, 1.0));
 
     initializeGame();
 
