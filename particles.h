@@ -1,16 +1,19 @@
 #ifndef PARTICLES_H
 #define PARTICLES_H
 
+#include <QObject>
+#include <QDebug>
 #include <QVector4D>
 #include <QVector>
 #include "particle.h"
 
 const int NB_PARTICLES = 10;
 
-class Particles
+class Particles : public QObject
 {
+    Q_OBJECT
 private:
-    QVector<Particle> _particles;
+    QVector<Particle *> _particles;
     QVector4D _color;
 
     float _timer;
@@ -22,6 +25,9 @@ public:
 
     QVector<QVector3D> getParticlesPosition();
 
+    QVector4D getColor() const;
+
+public slots:
     void update();
 };
 

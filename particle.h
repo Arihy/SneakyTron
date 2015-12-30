@@ -5,12 +5,13 @@
 #include <QVector2D>
 #include <QVector3D>
 #include <ctime>
+#include <QDebug>
 #include "utils.h"
 
-const float MIN_MOVE_SPEED = 0.04f;
-const float MAX_MOVE_SPEED = 0.1f;
+const float MIN_MOVE_SPEED = 0.02f;
+const float MAX_MOVE_SPEED = 0.03f;
 
-const float MIN_LIFETIME = 1.5f;
+const float MIN_LIFETIME = 1.0f;
 const float MAX_LIFETIME = 2.0f;
 
 class Particle

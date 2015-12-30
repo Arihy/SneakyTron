@@ -29,8 +29,8 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     _colorList.push_back(QVector4D(1.0, 0.2, 0.2, 1.0));
     _colorList.push_back(QVector4D(0.2, 1.0, 0.2, 1.0));
 
-    _particlesSystem.push_back(Particles(QVector4D(1.0, 0.2, 0.2, 1.0)));
-    _particlesSystem.push_back(Particles(QVector4D(0.2, 1.0, 0.2, 1.0)));
+    _particlesSystem.push_back(new Particles(QVector4D(1.0, 0.2, 0.2, 1.0)));
+    _particlesSystem.push_back(new Particles(QVector4D(0.2, 1.0, 0.2, 1.0)));
 
 //    _colorList.push_back(QVector4D(0.2, 0.2, 1.0, 1.0));
 //    _colorList.push_back(QVector4D(1.0, 1.0, 0.2, 1.0));
@@ -43,6 +43,12 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 
     _renderTimer = new QTimer();  
     connect(_renderTimer, SIGNAL(timeout()), this, SLOT(renderNow()));
+
+    for(Particles *p : _particlesSystem)
+    {
+        connect(_renderTimer, SIGNAL(timeout()), p, SLOT(update()));
+    }
+
     _renderTimer->start(30);
 
     _tailTimer = new QTimer();
@@ -57,6 +63,7 @@ GameWindow::~GameWindow()
 void GameWindow::initialize()
 {
     initPlayerShaderPrograme();
+    initParticlesShaderPrograme();
     initTailsShaderPrograme();
 }
 
@@ -109,6 +116,38 @@ void GameWindow::initPlayerShaderPrograme()
     _playerProgram->release();
 }
 
+void GameWindow::initParticlesShaderPrograme()
+{
+    _particlesProgram = new QOpenGLShaderProgram(this);
+
+    _particlesProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/tail.vert");
+    _particlesProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/tail.frag");
+
+    _particlesProgram->link();
+
+    _particlesProgram->bind();
+
+    _particlesPosAttr = _particlesProgram->attributeLocation("posAttr");
+    _particlesColAttr = _particlesProgram->uniformLocation("colAttr");
+    _matrixUniform = _particlesProgram->uniformLocation("matrix");
+
+    _particlesVao.create();
+    _particlesVao.bind();
+
+    _particlesVbo.create();
+    _particlesVbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    _particlesVbo.bind();
+
+    _particlesProgram->setAttributeBuffer(_particlesPosAttr, GL_FLOAT, 0, 3, 0);
+
+    _particlesProgram->enableAttributeArray(_particlesPosAttr);
+    _particlesProgram->enableAttributeArray(_particlesColAttr);
+
+    _particlesVao.release();
+
+    _particlesProgram->release();
+}
+
 void GameWindow::initTailsShaderPrograme()
 {
     _tailsProgram = new QOpenGLShaderProgram(this);
@@ -158,7 +197,7 @@ void GameWindow::initializeGame()
     myWorld.setBorders(_border);
     myWorld.setPlayers(temp);
     myWorld.init();
-    connect(myWorld.getMyColliderInstance(),SIGNAL(helloGameWindow()),this,SLOT(helloFromGameWindow()));
+    connect(myWorld.getMyColliderInstance(),SIGNAL(collisionPlayerBorder(Player*)),this,SLOT(collisionPlayerBorder(Player*)));
 }
 
 void GameWindow::updateTails()
@@ -169,11 +208,6 @@ void GameWindow::updateTails()
     }
 }
 
-void GameWindow::helloFromGameWindow()
-{
-    qDebug()<<"hello from gamewindow";
-}
-
 GLuint GameWindow::loadShader(GLenum type, const char *source)
 {
     GLuint shader = glCreateShader(type);
@@ -182,13 +216,6 @@ GLuint GameWindow::loadShader(GLenum type, const char *source)
     return shader;
 }
 
-void GameWindow::updateGame()
-{
-    for(Player &player : _player)
-    {
-        player.computeDirection();
-    }
-}
 
 void GameWindow::render(){
     const qreal retinaScale = devicePixelRatio();
@@ -244,6 +271,29 @@ void GameWindow::render(){
         _tailsVao.release();
         _tailsProgram->release();
     }
+
+    for(Particles *p : _particlesSystem)
+    {
+        if(p->getParticlesPosition().size() <= 0)
+            continue;
+        _particlesProgram->bind();
+        _particlesProgram->setUniformValue(_matrixUniform, matrix);
+
+        _particlesProgram->setUniformValue(_particlesColAttr, p->getColor());
+
+        _particlesVao.bind();
+        _particlesVbo.bind();
+
+        size_t particlesSize = p->getParticlesPosition().size()*sizeof(QVector3D);
+        _particlesVbo.allocate(particlesSize);
+        _particlesVbo.write(0, p->getParticlesPosition().constData(), particlesSize);
+        glPointSize(3);
+
+        glDrawArrays(GL_POINTS, 0, p->getParticlesPosition().size());
+
+        _particlesVao.release();
+        _particlesProgram->release();
+    }
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
@@ -271,3 +321,20 @@ void GameWindow::keyReleaseEvent(QKeyEvent *event)
         player.keyReleaseEvent(event);
     }
 }
+
+// SLOT
+
+void GameWindow::collisionPlayerBorder(Player *player)
+{
+    _particlesSystem[player->getId()-1]->initParticles(player->position());
+    qDebug() << "player " << player->getId() << " crashed !";
+}
+
+void GameWindow::updateGame()
+{
+    for(Player &player : _player)
+    {
+        player.computeDirection();
+    }
+}
+

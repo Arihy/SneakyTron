@@ -1,5 +1,10 @@
 #include "particles.h"
 
+QVector4D Particles::getColor() const
+{
+    return _color;
+}
+
 Particles::Particles()
 {
     _timer = 0.0f;
@@ -18,31 +23,32 @@ void Particles::initParticles(QVector3D pos)
     _particles.clear();
     for(int i = 0; i < NB_PARTICLES; i++)
     {
-        _particles.push_back(Particle(pos));
+        _particles.push_back(new Particle(pos));
     }
 }
 
 QVector<QVector3D> Particles::getParticlesPosition()
 {
     QVector<QVector3D> particlesPosition = QVector<QVector3D>();
-    for(Particle p : _particles)
+    for(Particle *p : _particles)
     {
-        particlesPosition.push_back(p.getPosition());
+        particlesPosition.push_back(p->getPosition());
     }
     return particlesPosition;
 }
 
 void Particles::update()
 {
+    _timer += 0.4f;
     for(int i = 0; i < _particles.size(); i++)
     {
-        if(_timer > _particles[i].getlifetime())
+        if(_timer > _particles[i]->getlifetime())
         {
             _particles.remove(i);
         }
         else
         {
-            _particles[i].update();
+            _particles[i]->update();
         }
     }
 }
