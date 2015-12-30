@@ -136,16 +136,9 @@ void GameWindow::initParticlesShaderPrograme()
 
     _particlesVbo.create();
     _particlesVbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
-//    _particlesVbo.bind();
+    _particlesVbo.bind();
 
-//    _particlesVbo.allocate(posSize + colSize);
-
-//    _particlesVbo.bind();
-//    _particlesVbo.write(0, position.constData(), posSize);
-//    _particlesVbo.write(posSize, colors.constData(), colSize);
-
-//    _particlesProgram->setAttributeBuffer(_particlesPosAttr, GL_FLOAT, 0, 3, 0);
-//    _particlesProgram->setAttributeBuffer(_particlesColAttr, GL_FLOAT, posSize, 4, 0);
+    _particlesProgram->setAttributeBuffer(_particlesPosAttr, GL_FLOAT, 0, 3, 0);
 
     _particlesProgram->enableAttributeArray(_particlesPosAttr);
     _particlesProgram->enableAttributeArray(_particlesColAttr);
@@ -294,9 +287,9 @@ void GameWindow::render(){
         size_t particlesSize = p->getParticlesPosition().size()*sizeof(QVector3D);
         _particlesVbo.allocate(particlesSize);
         _particlesVbo.write(0, p->getParticlesPosition().constData(), particlesSize);
-//        glPointSize(5);
-        for (int i =0; i <p->getParticlesPosition().size();i++) qDebug()<< p->getParticlesPosition()[i];
- //       glDrawArrays(GL_POINTS, 0, p->getParticlesPosition().size());
+        glPointSize(3);
+
+        glDrawArrays(GL_POINTS, 0, p->getParticlesPosition().size());
 
         _particlesVao.release();
         _particlesProgram->release();

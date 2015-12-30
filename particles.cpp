@@ -39,6 +39,7 @@ QVector<QVector3D> Particles::getParticlesPosition()
 
 void Particles::update()
 {
+    _timer += 0.4f;
     for(int i = 0; i < _particles.size(); i++)
     {
         if(_timer > _particles[i]->getlifetime())
