@@ -22,15 +22,20 @@ private:
     QVector<Player> _player;
     QVector<Border*> _border;
     QVector<QVector4D> _colorList;
-    QVector<Particles> _particlesSystem;
+    QVector<Particles *> _particlesSystem;
 
     GLuint _playerPosAttr, _playerColAttr;
+    GLuint _particlesPosAttr, _particlesColAttr;
     GLuint _tailsPosAttr, _tailsColAttr;
     GLuint _matrixUniform;
 
     QOpenGLShaderProgram *_playerProgram;
     QOpenGLVertexArrayObject _playerVao;
     QOpenGLBuffer _playerVbo;
+
+    QOpenGLShaderProgram *_particlesProgram;
+    QOpenGLVertexArrayObject _particlesVao;
+    QOpenGLBuffer _particlesVbo;
 
     QOpenGLShaderProgram *_tailsProgram;
     QOpenGLVertexArrayObject _tailsVao;
@@ -46,6 +51,7 @@ private:
     void keyReleaseEvent(QKeyEvent *event);
 
     void initPlayerShaderPrograme();
+    void initParticlesShaderPrograme();
     void initTailsShaderPrograme();
 
 public:
@@ -58,7 +64,7 @@ public:
 
 public slots:
     void updateTails();
-    void helloFromGameWindow();
+    void collisionPlayerBorder(Player *player);
 };
 
 #endif // GAMEWINDOW_H

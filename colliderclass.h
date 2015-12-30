@@ -15,7 +15,7 @@ public:
     void CheckPlayerCollideBorder(Entity *bodyUserAData, Entity *bodyUserBData);
 
 signals:
-    void helloGameWindow();
+    void collisionPlayerBorder(Player*);
 };
 
 #endif // COLLIDERCLASS_H
