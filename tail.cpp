@@ -10,10 +10,13 @@ void Tail::setChain(const QVector<QVector3D> &chain)
     _chain = chain;
 }
 
+
 Tail::Tail()
 {
-
+    
 }
+
+
 
 EntityType Tail::getEntityType()
 {

@@ -5,6 +5,7 @@
 #include <QVector3D>
 #include "entity.h"
 
+
 static const int NB_POINTS_INIT=100;
 
 class Tail : public Entity
@@ -15,11 +16,13 @@ private:
 public:
     Tail();
 
+
     EntityType getEntityType() override;
     int size();
     void add(QVector3D);
     QVector<QVector3D> getChain() const;
     void setChain(const QVector<QVector3D> &chain);
+
 };
 
 #endif // TAIL_H

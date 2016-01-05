@@ -95,19 +95,30 @@ void Physic::initTail(){
 
 void Physic::updateTail()
 {
+    static const float minDistance=0.006;
+    QVector3D memory;
     std::vector< b2Vec2> vec;
-    QVector<QVector3D> tmp;
+    QVector<QVector3D> tmp, tmp2;
     Tail* tail;
     for(b2Body * body : _tailsBody)
     {
         b2Fixture *fixtureA = body->GetFixtureList();
         if (fixtureA!=NULL) body->DestroyFixture(fixtureA);
         tmp.clear();
+        tmp2.clear();
         tail=static_cast<Tail*> (body->GetUserData());
         tmp = tail->getChain();
         vec.clear();
         for (QVector3D v : tmp)
-            if (v.distanceToPoint(tmp.last())>PLAYER_RADIUS) vec.push_back(b2Vec2(v.x(),v.y()));
+            if (v.distanceToPoint(tmp.last())>PLAYER_RADIUS) tmp2.push_back(v);
+        if (tmp2.size()<=2) break;
+        vec.push_back(b2Vec2(tmp2[0].x(),tmp2[0].y()));
+        memory=tmp2[0];
+        for (int i = 1;i<tmp2.size();i++){
+            if (tmp2[i].distanceToPoint(memory)<minDistance) continue;
+            memory=tmp2[i];
+            vec.push_back(b2Vec2(tmp2[i].x(),tmp2[i].y()));
+        }
         if (vec.size()<2) continue; // Il faut au moins 2 points pour créer une chaine
         b2ChainShape chain;
         chain.CreateChain(&vec[0], vec.size());

@@ -2,7 +2,6 @@
 
 Particle::Particle()
 {
-    std::srand(std::time(0));
     _moveSpeed = MIN_MOVE_SPEED + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX/(MAX_MOVE_SPEED - MIN_MOVE_SPEED)));
     _lifetime = MIN_LIFETIME + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX/(MAX_LIFETIME - MIN_LIFETIME)));
     _position = QVector3D(0.0f, 0.0f, 0.0f);
