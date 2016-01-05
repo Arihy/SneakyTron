@@ -17,6 +17,7 @@ private:
     QVector4D _color;
 
     float _timer;
+    bool _animationDone;
 
 public:
     Particles();
@@ -26,6 +27,8 @@ public:
     QVector<QVector3D> getParticlesPosition();
 
     QVector4D getColor() const;
+
+    bool animationDone();
 
 public slots:
     void update();

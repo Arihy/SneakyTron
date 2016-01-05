@@ -326,7 +326,8 @@ void GameWindow::keyReleaseEvent(QKeyEvent *event)
 
 void GameWindow::playerExplodes(Player *player)
 {
-    _particlesSystem[player->getId()-1]->initParticles(player->position());
+    if(_particlesSystem[player->getId()-1]->animationDone())
+        _particlesSystem[player->getId()-1]->initParticles(player->position());
     qDebug() << "player " << player->getId() << " crashed !";
 }
 

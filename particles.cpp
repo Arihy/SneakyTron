@@ -5,6 +5,11 @@ QVector4D Particles::getColor() const
     return _color;
 }
 
+bool Particles::animationDone()
+{
+    return _animationDone;
+}
+
 Particles::Particles()
 {
     _timer = 0.0f;
@@ -21,6 +26,7 @@ void Particles::initParticles(QVector3D pos)
 {
     _timer = 0.0f;
     _particles.clear();
+    _animationDone = false;
     for(int i = 0; i < NB_PARTICLES; i++)
     {
         _particles.push_back(new Particle(pos));
@@ -51,4 +57,6 @@ void Particles::update()
             _particles[i]->update();
         }
     }
+    if(_particles.size() < 1)
+        _animationDone = true;
 }
