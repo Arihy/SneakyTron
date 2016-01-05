@@ -92,9 +92,7 @@ void GameWindow::initPlayerShaderPrograme()
 
     _playerVao.bind();
 
-    size_t posSize=sizeof(QVector3D);
     _playerProgram->setAttributeBuffer(_playerPosAttr, GL_FLOAT, 0, 3, 0);
-    _playerProgram->setAttributeBuffer(_playerColUni, GL_FLOAT, posSize, 4, 0);
 
     _playerProgram->enableAttributeArray(_playerPosAttr);
     _playerProgram->enableAttributeArray(_playerColUni);
@@ -210,17 +208,13 @@ void GameWindow::render(){
     glViewport(0, 0, width() * retinaScale, height() * retinaScale);
 
     glClear(GL_COLOR_BUFFER_BIT);
-    //glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
-
-
-
 
     QMatrix4x4 matrix;
     matrix.perspective(50.0f, 16.0f/9.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, -2);
-
 
     for(Player player : _player)
     {
@@ -234,15 +228,14 @@ void GameWindow::render(){
         size_t posSize = sizeof(QVector3D);
         QVector<QVector3D> tmp;
         tmp<<player.position();
+        _playerVbo.allocate(posSize);
         _playerVbo.write(0, tmp.constData(), posSize);
-        glPointSize(10);
+
         glDrawArrays(GL_POINTS, 0, 1);
 
         _playerVao.release();
         _playerProgram->release();
     }
-
-
 
     for(Player player : _player)
     {
@@ -257,7 +250,7 @@ void GameWindow::render(){
         size_t tailSize = player.tail()->size()*sizeof(QVector3D);
         _tailsVbo.allocate(tailSize);
         _tailsVbo.write(0, player.tail()->getChain().constData(), tailSize);
-        glPointSize(1);
+
         glDrawArrays(GL_LINE_STRIP, 0, player.tail()->size());
 
         _tailsVao.release();
@@ -279,7 +272,6 @@ void GameWindow::render(){
         size_t particlesSize = p->getParticlesPosition().size()*sizeof(QVector3D);
         _particlesVbo.allocate(particlesSize);
         _particlesVbo.write(0, p->getParticlesPosition().constData(), particlesSize);
-        glPointSize(3);
 
         glDrawArrays(GL_POINTS, 0, p->getParticlesPosition().size());
 
