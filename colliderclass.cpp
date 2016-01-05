@@ -10,16 +10,18 @@ void ColliderClass::BeginContact(b2Contact *contact)
     Entity* bodyUserAData = static_cast<Entity*> (contact->GetFixtureA()->GetBody()->GetUserData());
     Entity* bodyUserBData = static_cast<Entity*> (contact->GetFixtureB()->GetBody()->GetUserData());
 
-    CheckPlayerCollideBorder(bodyUserAData, bodyUserBData);
-    CheckPlayerCollideBorder(bodyUserBData, bodyUserAData);
+    CheckPlayerCollision(bodyUserAData, bodyUserBData);
+    CheckPlayerCollision(bodyUserBData, bodyUserAData);
 }
 
-void ColliderClass::CheckPlayerCollideBorder(Entity* bodyUserAData, Entity* bodyUserBData)
+void ColliderClass::CheckPlayerCollision(Entity* bodyUserAData, Entity* bodyUserBData)
 {
-    if((bodyUserAData->getEntityType() == PLAYER && bodyUserBData->getEntityType() == BORDER))
+    if((bodyUserAData->getEntityType() == PLAYER && bodyUserBData->getEntityType() == BORDER) ||
+            (bodyUserAData->getEntityType() == PLAYER && bodyUserBData->getEntityType() == PLAYER) ||
+            (bodyUserAData->getEntityType() == PLAYER && bodyUserBData->getEntityType() == TAIL))
     {
         Player *player = static_cast<Player*> (bodyUserAData);
-        emit collisionPlayerBorder(player);
+        emit playerExplodes(player);
     }
 }
 

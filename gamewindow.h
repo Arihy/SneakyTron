@@ -64,7 +64,7 @@ public:
 
 public slots:
     void updateTails();
-    void collisionPlayerBorder(Player *player);
+    void playerExplodes(Player *player);
 };
 
 #endif // GAMEWINDOW_H

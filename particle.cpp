@@ -33,5 +33,6 @@ float Particle::getlifetime()
 
 void Particle::update()
 {
+    _moveSpeed -= 0.005f;
     _position += _direction * _moveSpeed;
 }

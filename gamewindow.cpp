@@ -197,7 +197,7 @@ void GameWindow::initializeGame()
     myWorld.setBorders(_border);
     myWorld.setPlayers(temp);
     myWorld.init();
-    connect(myWorld.getMyColliderInstance(),SIGNAL(collisionPlayerBorder(Player*)),this,SLOT(collisionPlayerBorder(Player*)));
+    connect(myWorld.getMyColliderInstance(),SIGNAL(playerExplodes(Player*)),this,SLOT(playerExplodes(Player*)));
 }
 
 void GameWindow::updateTails()
@@ -324,7 +324,7 @@ void GameWindow::keyReleaseEvent(QKeyEvent *event)
 
 // SLOT
 
-void GameWindow::collisionPlayerBorder(Player *player)
+void GameWindow::playerExplodes(Player *player)
 {
     _particlesSystem[player->getId()-1]->initParticles(player->position());
     qDebug() << "player " << player->getId() << " crashed !";

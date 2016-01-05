@@ -12,10 +12,10 @@ public:
     ColliderClass();
 
     virtual void BeginContact(b2Contact *contact) override;
-    void CheckPlayerCollideBorder(Entity *bodyUserAData, Entity *bodyUserBData);
+    void CheckPlayerCollision(Entity *bodyUserAData, Entity *bodyUserBData);
 
 signals:
-    void collisionPlayerBorder(Player*);
+    void playerExplodes(Player*);
 };
 
 #endif // COLLIDERCLASS_H
