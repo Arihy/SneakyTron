@@ -4,7 +4,7 @@
 #include <QVector3D>
 #include <QVector>
 
-static const int NB_PLAYER = 2;
+static const int NB_PLAYER = 4;
 static const int HALF_DIM_BOARD = 1;
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
@@ -17,23 +17,24 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     controller.push_back(Qt::Key_Left);
     controller.push_back(Qt::Key_Right);
     _controller.push_back(controller);
-//    controller.clear();
-//    controller.push_back(Qt::Key_I);
-//    controller.push_back(Qt::Key_P);
-//    _controller.push_back(controller);
-//    controller.clear();
-//    controller.push_back(Qt::Key_F);
-//    controller.push_back(Qt::Key_H);
-//    _controller.push_back(controller);
+    controller.clear();
+    controller.push_back(Qt::Key_I);
+    controller.push_back(Qt::Key_P);
+    _controller.push_back(controller);
+    controller.clear();
+    controller.push_back(Qt::Key_F);
+    controller.push_back(Qt::Key_H);
+    _controller.push_back(controller);
 
     _colorList.push_back(QVector4D(1.0, 0.2, 0.2, 1.0));
     _colorList.push_back(QVector4D(0.2, 1.0, 0.2, 1.0));
+    _colorList.push_back(QVector4D(0.2, 0.2, 1.0, 1.0));
+    _colorList.push_back(QVector4D(1.0, 1.0, 0.2, 1.0));
 
     _particlesSystem.push_back(new Particles(QVector4D(1.0, 0.2, 0.2, 1.0)));
     _particlesSystem.push_back(new Particles(QVector4D(0.2, 1.0, 0.2, 1.0)));
-
-//    _colorList.push_back(QVector4D(0.2, 0.2, 1.0, 1.0));
-//    _colorList.push_back(QVector4D(1.0, 1.0, 0.2, 1.0));
+    _particlesSystem.push_back(new Particles(QVector4D(0.2, 0.2, 1.0, 1.0)));
+    _particlesSystem.push_back(new Particles(QVector4D(1.0, 1.0, 0.2, 1.0)));
 
     initializeGame();
 
@@ -79,18 +80,8 @@ void GameWindow::initPlayerShaderPrograme()
     _playerProgram->bind();
 
     _playerPosAttr = _playerProgram->attributeLocation("posAttr");
-    _playerColAttr = _playerProgram->attributeLocation("colAttr");
+    _playerColUni = _playerProgram->uniformLocation("colUni");
     _matrixUniform = _playerProgram->uniformLocation("matrix");
-
-    QVector<QVector3D> position;
-    QVector<QVector4D> colors;
-    for(Player player : _player)
-    {
-        position.push_back(player.position());
-        colors.push_back(player.color());
-    }
-
-    size_t posSize = sizeof(QVector3D)*position.size(), colSize = sizeof(QVector4D)*colors.size();
 
     _playerVao.create();
     _playerVao.bind();
@@ -99,17 +90,14 @@ void GameWindow::initPlayerShaderPrograme()
     _playerVbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
     _playerVbo.bind();
 
-    _playerVbo.allocate(posSize + colSize);
-
     _playerVao.bind();
-    _playerVbo.write(0, position.constData(), posSize);
-    _playerVbo.write(posSize, colors.constData(), colSize);
 
+    size_t posSize=sizeof(QVector3D);
     _playerProgram->setAttributeBuffer(_playerPosAttr, GL_FLOAT, 0, 3, 0);
-    _playerProgram->setAttributeBuffer(_playerColAttr, GL_FLOAT, posSize, 4, 0);
+    _playerProgram->setAttributeBuffer(_playerColUni, GL_FLOAT, posSize, 4, 0);
 
     _playerProgram->enableAttributeArray(_playerPosAttr);
-    _playerProgram->enableAttributeArray(_playerColAttr);
+    _playerProgram->enableAttributeArray(_playerColUni);
 
     _playerVao.release();
 
@@ -227,30 +215,34 @@ void GameWindow::render(){
     glClearColor(0.1, 0.1, 0.1, 1.0);
 
 
-    _playerProgram->bind();
+
 
     QMatrix4x4 matrix;
     matrix.perspective(50.0f, 16.0f/9.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, -2);
 
-    _playerProgram->setUniformValue(_matrixUniform, matrix);
 
-    _playerVao.bind();
-    _playerVbo.bind();
-
-    QVector<QVector3D> position;
     for(Player player : _player)
     {
-        position.push_back(player.position());
+        _playerProgram->bind();
+        _playerProgram->setUniformValue(_matrixUniform, matrix);
+        _playerProgram->setUniformValue(_playerColUni, player.color());
+
+        _playerVao.bind();
+        _playerVbo.bind();
+
+        size_t posSize = sizeof(QVector3D);
+        QVector<QVector3D> tmp;
+        tmp<<player.position();
+        _playerVbo.write(0, tmp.constData(), posSize);
+        glPointSize(10);
+        glDrawArrays(GL_POINTS, 0, 1);
+
+        _playerVao.release();
+        _playerProgram->release();
     }
 
-    size_t posSize = sizeof(QVector3D)*position.size();
-    _playerVbo.write(0, position.constData(), posSize);
-    glPointSize(10);
-    glDrawArrays(GL_POINTS, 0, NB_PLAYER);
 
-    _playerVao.release();
-    _playerProgram->release();
 
     for(Player player : _player)
     {

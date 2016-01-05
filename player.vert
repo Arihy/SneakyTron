@@ -1,5 +1,5 @@
 attribute vec4 posAttr;
-attribute vec4 colAttr;
+uniform vec4 colAttr;
 uniform mat4 matrix;
 varying vec4 col;
 
