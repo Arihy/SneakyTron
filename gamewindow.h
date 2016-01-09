@@ -24,7 +24,7 @@ private:
     QVector<QVector4D> _colorList;
     QVector<Particles *> _particlesSystem;
 
-    GLuint _playerPosAttr, _playerColUni;
+    GLuint _playerPosAttr, _playerCenterUni, _playerColUni;
     GLuint _particlesPosAttr, _particlesColAttr;
     GLuint _tailsPosAttr, _tailsColAttr;
     GLuint _matrixUniform;

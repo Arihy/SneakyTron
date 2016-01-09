@@ -80,6 +80,7 @@ void GameWindow::initPlayerShaderPrograme()
     _playerProgram->bind();
 
     _playerPosAttr = _playerProgram->attributeLocation("posAttr");
+    _playerCenterUni = _playerProgram->attributeLocation("playerCenter");
     _playerColUni = _playerProgram->uniformLocation("colUni");
     _matrixUniform = _playerProgram->uniformLocation("matrix");
 
@@ -216,22 +217,31 @@ void GameWindow::render(){
     matrix.perspective(50.0f, 16.0f/9.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, -2);
 
-    for(Player player : _player)
+    for(Player &player : _player)
     {
         _playerProgram->bind();
         _playerProgram->setUniformValue(_matrixUniform, matrix);
         _playerProgram->setUniformValue(_playerColUni, player.color());
+        _playerProgram->setUniformValue(_playerCenterUni, player.position());
 
         _playerVao.bind();
         _playerVbo.bind();
 
-        size_t posSize = sizeof(QVector3D);
-        QVector<QVector3D> tmp;
-        tmp<<player.position();
-        _playerVbo.allocate(posSize);
-        _playerVbo.write(0, tmp.constData(), posSize);
+        QVector<QVector3D> playerShape;
+        QVector3D cornerDistanceToCenter = QVector3D(0.01f, 0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter + player.position();
+        cornerDistanceToCenter = QVector3D(0.01f, -0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter + player.position();
+        cornerDistanceToCenter = QVector3D(-0.01f, -0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter + player.position();
+        cornerDistanceToCenter = QVector3D(-0.01f, 0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter + player.position();
 
-        glDrawArrays(GL_POINTS, 0, 1);
+        size_t posSize = playerShape.size() * sizeof(QVector3D);
+        _playerVbo.allocate(posSize);
+        _playerVbo.write(0, playerShape.constData(), posSize);
+
+        glDrawArrays(GL_POLYGON, 0, playerShape.size());
 
         _playerVao.release();
         _playerProgram->release();
@@ -255,6 +265,8 @@ void GameWindow::render(){
 
         _tailsVao.release();
         _tailsProgram->release();
+
+        qDebug() << player.position();
     }
 
     for(Particles *p : _particlesSystem)
