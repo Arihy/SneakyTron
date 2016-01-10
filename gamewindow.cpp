@@ -7,22 +7,6 @@
 static const int NB_PLAYER = 4;
 static const int HALF_DIM_BOARD = 1;
 
-static const char *vertexShaderSource =
-        "attribute vec4 posAttr;\n"
-        "uniform vec4 playerPosition;\n"
-        "uniform vec4 colUni;\n"
-        "uniform mat4 matrix;\n"
-        "varying lowp vec4 col;\n"
-        "void main(){\n"
-        "gl_Position = matrix * posAttr;\n"
-        "col = vec4(0.0,0.0,1.0,0.8);\n"
-        "}\n";
-
-static const char *fragmentShaderSource =
-    "varying lowp vec4 col;\n"
-    "void main() {\n"
-    "   gl_FragColor = col;\n"
-    "}\n";
 
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
