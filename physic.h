@@ -22,6 +22,8 @@ private :
     QVector<b2Body *> _playersBody;
     QVector<b2Body *> _tailsBody;
     ColliderClass myColliderInstance;
+    QVector<b2Body *> _binBodies;
+    bool pause = false;
 public:
     Physic();
     Physic(QVector<Player *> listPlayer);
@@ -32,6 +34,8 @@ public:
     void initTail();
     void updateTail();
     void updateDirection();
+    void addToBin(b2Body *body);
+    void resetWorldContent();
 
 
 
@@ -42,8 +46,11 @@ public:
 
     ColliderClass* getMyColliderInstance();
 
+    b2World* getWorld() ;
+
 public slots:
     void tick();
+
 };
 
 

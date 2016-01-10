@@ -25,6 +25,11 @@ ColliderClass* Physic::getMyColliderInstance()
     return &myColliderInstance;
 }
 
+b2World *Physic::getWorld()
+{
+    return &_world;
+}
+
 Physic::Physic():_world(b2Vec2(0.0f, 0.0f))
 {
 
@@ -100,6 +105,7 @@ void Physic::updateTail()
     std::vector< b2Vec2> vec;
     QVector<QVector3D> tmp, tmp2;
     Tail* tail;
+
     for(b2Body * body : _tailsBody)
     {
         b2Fixture *fixtureA = body->GetFixtureList();
@@ -114,6 +120,7 @@ void Physic::updateTail()
         if (tmp2.size()<=2) break;
         vec.push_back(b2Vec2(tmp2[0].x(),tmp2[0].y()));
         memory=tmp2[0];
+
         for (int i = 1;i<tmp2.size();i++){
             if (tmp2[i].distanceToPoint(memory)<minDistance) continue;
             memory=tmp2[i];
@@ -127,6 +134,7 @@ void Physic::updateTail()
         body->CreateFixture(&fixtureDef);
     }
 
+
 }
 
 void Physic::updateDirection()
@@ -139,6 +147,17 @@ void Physic::updateDirection()
 
 void Physic::tick()
 {
+    if (_binBodies.size()!=0){
+               qDebug()<<"its apo";
+        for (b2Body* body : _binBodies) _world.DestroyBody(body);
+        _binBodies.clear();
+    }
+
+    if (pause) return; // we don't go further if the physics is stopped
+    if (_world.GetBodyCount()==0) {
+        return;
+    }
+
     float32 timeStep = 30.0f/1000.0f;
 
     int32 velocityIterations = 6;
@@ -146,14 +165,13 @@ void Physic::tick()
 
     updateDirection();
 
-
-    for (int i=0 ;i <_players.size();i++)
+    for (int i=0 ;i <_playersBody.size();i++)
     {
         _playersBody[i]->SetLinearVelocity(10*b2Vec2(_players[i]->direction().x()*_players[i]->moveSpeed(),_players[i]->direction().y()*_players[i]->moveSpeed()));
     }
     _world.Step(timeStep, velocityIterations, positionIterations);
 
-    for (int i=0 ;i <_players.size();i++)
+    for (int i=0 ;i <_playersBody.size();i++)
     {
         b2Vec2 position = _playersBody[i]->GetPosition();
         _players[i]->setPosition(QVector3D(position.x, position.y, 0));
@@ -161,4 +179,21 @@ void Physic::tick()
 
     updateTail();
 
+
+
+}
+
+void Physic::addToBin(b2Body *body)
+{
+    _binBodies.push_back(body);
+}
+
+void Physic::resetWorldContent()
+{
+    _binBodies.clear();
+    b2Body* body=_world.GetBodyList();
+    while (body != NULL){
+        _binBodies.push_back(body);
+        body = body->GetNext();
+    }
 }

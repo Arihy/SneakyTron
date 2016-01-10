@@ -60,11 +60,12 @@ public:
     void render();
     void initialize();
     void updateGame();
-    void initializeGame();
+
 
 public slots:
     void updateTails();
     void playerExplodes(Player *player);
+    void initializeGame();
 };
 
 #endif // GAMEWINDOW_H

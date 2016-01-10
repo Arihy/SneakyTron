@@ -37,25 +37,25 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     _particlesSystem.push_back(new Particles(QVector4D(0.2, 0.2, 1.0, 1.0)));
     _particlesSystem.push_back(new Particles(QVector4D(1.0, 1.0, 0.2, 1.0)));
 
-    initializeGame();
+
 
     _physicTimer = new QTimer();
     connect(_physicTimer, SIGNAL(timeout()), &myWorld, SLOT(tick()));
-    _physicTimer->start(30);
 
-    _renderTimer = new QTimer();  
+    _renderTimer = new QTimer();
     connect(_renderTimer, SIGNAL(timeout()), this, SLOT(renderNow()));
+
+    _tailTimer = new QTimer();
+    connect(_tailTimer, SIGNAL(timeout()), this, SLOT(updateTails()));
 
     for(Particles *p : _particlesSystem)
     {
         connect(_renderTimer, SIGNAL(timeout()), p, SLOT(update()));
     }
 
-    _renderTimer->start(30);
+    connect(myWorld.getMyColliderInstance(),SIGNAL(playerExplodes(Player*)),this,SLOT(playerExplodes(Player*)));
 
-    _tailTimer = new QTimer();
-    _tailTimer->start(30);
-    connect(_tailTimer, SIGNAL(timeout()), this, SLOT(updateTails()));
+    initializeGame();
 }
 
 GameWindow::~GameWindow()
@@ -75,9 +75,6 @@ void GameWindow::initPlayerShaderPrograme()
 
     _playerProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/player.vert");
     _playerProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/player.frag");
-
-//    _playerProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
-//    _playerProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
 
     _playerProgram->link();
 
@@ -187,7 +184,13 @@ void GameWindow::initializeGame()
     myWorld.setBorders(_border);
     myWorld.setPlayers(temp);
     myWorld.init();
-    connect(myWorld.getMyColliderInstance(),SIGNAL(playerExplodes(Player*)),this,SLOT(playerExplodes(Player*)));
+
+    _physicTimer->start(30);
+
+    _renderTimer->start(30);
+
+    _tailTimer->start(30);
+
 }
 
 void GameWindow::updateTails()
@@ -230,7 +233,6 @@ void GameWindow::render(){
         _playerVao.bind();
         _playerVbo.bind();
 
-        qDebug() << player.position();
         QVector<QVector3D> playerShape;
         QVector3D cornerDistanceToCenter = 30*QVector3D(0.01f, 0.01f, 0.0f);
         playerShape << cornerDistanceToCenter +player.position();
@@ -309,7 +311,10 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         close();
         break;
     case Qt::Key_R:
-        initializeGame();
+        myWorld.resetWorldContent();
+        QTimer* endTimer;
+        endTimer->singleShot(35,&myWorld, SLOT(tick()));
+        endTimer->singleShot(35,this, SLOT(initializeGame()));
         break;
     }
 }
