@@ -7,6 +7,23 @@
 static const int NB_PLAYER = 4;
 static const int HALF_DIM_BOARD = 1;
 
+static const char *vertexShaderSource =
+        "attribute vec4 posAttr;\n"
+        "uniform vec4 playerPosition;\n"
+        "uniform vec4 colUni;\n"
+        "uniform mat4 matrix;\n"
+        "varying lowp vec4 col;\n"
+        "void main(){\n"
+        "gl_Position = matrix * posAttr;\n"
+        "col = vec4(0.0,0.0,1.0,0.8);\n"
+        "}\n";
+
+static const char *fragmentShaderSource =
+    "varying lowp vec4 col;\n"
+    "void main() {\n"
+    "   gl_FragColor = col;\n"
+    "}\n";
+
 GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 {
     QVector<Qt::Key> controller;
@@ -74,6 +91,9 @@ void GameWindow::initPlayerShaderPrograme()
 
     _playerProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/player.vert");
     _playerProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/player.frag");
+
+//    _playerProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
+//    _playerProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSource);
 
     _playerProgram->link();
 
@@ -221,20 +241,20 @@ void GameWindow::render(){
         _playerProgram->bind();
         _playerProgram->setUniformValue(_matrixUniform, matrix);
         _playerProgram->setUniformValue(_playerColUni, player.color());
-        _playerProgram->setUniformValue(_playerCenterUni, player.position());
+        _playerProgram->setUniformValue(_playerCenterUni, QVector3D(10,10,10));
 
         _playerVao.bind();
         _playerVbo.bind();
 
         qDebug() << player.position();
         QVector<QVector3D> playerShape;
-        QVector3D cornerDistanceToCenter = 3*QVector3D(0.01f, 0.01f, 0.0f);
+        QVector3D cornerDistanceToCenter = 30*QVector3D(0.01f, 0.01f, 0.0f);
         playerShape << cornerDistanceToCenter +player.position();
-        cornerDistanceToCenter = 3*QVector3D(0.01f, -0.01f, 0.0f);
+        cornerDistanceToCenter = 30*QVector3D(0.01f, -0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
-        cornerDistanceToCenter = 3*QVector3D(-0.01f, -0.01f, 0.0f);
+        cornerDistanceToCenter = 30*QVector3D(-0.01f, -0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
-        cornerDistanceToCenter =3* QVector3D(-0.01f, 0.01f, 0.0f);
+        cornerDistanceToCenter =30* QVector3D(-0.01f, 0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
 
         size_t posSize = playerShape.size() * sizeof(QVector3D);
