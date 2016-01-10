@@ -80,7 +80,7 @@ void GameWindow::initPlayerShaderPrograme()
     _playerProgram->bind();
 
     _playerPosAttr = _playerProgram->attributeLocation("posAttr");
-    _playerCenterUni = _playerProgram->attributeLocation("playerCenter");
+    _playerCenterUni = _playerProgram->uniformLocation("playerCenter");
     _playerColUni = _playerProgram->uniformLocation("colUni");
     _matrixUniform = _playerProgram->uniformLocation("matrix");
 
@@ -96,7 +96,6 @@ void GameWindow::initPlayerShaderPrograme()
     _playerProgram->setAttributeBuffer(_playerPosAttr, GL_FLOAT, 0, 3, 0);
 
     _playerProgram->enableAttributeArray(_playerPosAttr);
-    _playerProgram->enableAttributeArray(_playerColUni);
 
     _playerVao.release();
 
@@ -227,15 +226,16 @@ void GameWindow::render(){
         _playerVao.bind();
         _playerVbo.bind();
 
+        qDebug() << player.position();
         QVector<QVector3D> playerShape;
-        QVector3D cornerDistanceToCenter = QVector3D(0.01f, 0.01f, 0.0f);
-        playerShape << cornerDistanceToCenter + player.position();
-        cornerDistanceToCenter = QVector3D(0.01f, -0.01f, 0.0f);
-        playerShape << cornerDistanceToCenter + player.position();
-        cornerDistanceToCenter = QVector3D(-0.01f, -0.01f, 0.0f);
-        playerShape << cornerDistanceToCenter + player.position();
-        cornerDistanceToCenter = QVector3D(-0.01f, 0.01f, 0.0f);
-        playerShape << cornerDistanceToCenter + player.position();
+        QVector3D cornerDistanceToCenter = 3*QVector3D(0.01f, 0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter +player.position();
+        cornerDistanceToCenter = 3*QVector3D(0.01f, -0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter+player.position();
+        cornerDistanceToCenter = 3*QVector3D(-0.01f, -0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter+player.position();
+        cornerDistanceToCenter =3* QVector3D(-0.01f, 0.01f, 0.0f);
+        playerShape << cornerDistanceToCenter+player.position();
 
         size_t posSize = playerShape.size() * sizeof(QVector3D);
         _playerVbo.allocate(posSize);
@@ -266,7 +266,7 @@ void GameWindow::render(){
         _tailsVao.release();
         _tailsProgram->release();
 
-        qDebug() << player.position();
+
     }
 
     for(Particles *p : _particlesSystem)
