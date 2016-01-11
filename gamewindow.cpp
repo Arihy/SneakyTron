@@ -37,7 +37,7 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     _particlesSystem.push_back(new Particles(QVector4D(0.2, 0.2, 1.0, 1.0)));
     _particlesSystem.push_back(new Particles(QVector4D(1.0, 1.0, 0.2, 1.0)));
 
-    _gameState = GameState::Game;
+    _gameState = GameState::Menu;
 
     _physicTimer = new QTimer();
     connect(_physicTimer, SIGNAL(timeout()), &myWorld, SLOT(tick()));
@@ -56,7 +56,7 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     connect(myWorld.getMyColliderInstance(),SIGNAL(playerExplodes(Player*)),this,SLOT(playerExplodes(Player*)));
     connect(myWorld.getMyColliderInstance(),SIGNAL(destroyBody(b2Body*)),&myWorld,SLOT(addToBin(b2Body*)));
 
-    initializeGame();
+    //initializeGame();
 }
 
 GameWindow::~GameWindow()
@@ -383,18 +383,42 @@ void GameWindow::renderGame()
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
 {
-    for(Player &player : _player)
+    switch(_gameState)
     {
-        player.keyPressEvent(event);
-    }
-
-    switch(event->key())
-    {
-    case Qt::Key_Escape:
-        close();
+    case GameState::Menu:
+        switch(event->key())
+        {
+        case Qt::Key_Escape:
+            qDebug() << "exit game !";
+            close();
+            break;
+        case Qt::Key_Return:
+            qDebug() << "begin game !! ";
+            initializeGame();
+            _gameState = GameState::Game;
+            break;
+        }
         break;
-    case Qt::Key_R:
-        resetWorld();
+    case GameState::Game:
+        for(Player &player : _player)
+        {
+            player.keyPressEvent(event);
+        }
+
+        switch(event->key())
+        {
+        case Qt::Key_Escape:
+            resetWorld();
+            _gameState = GameState::Menu;
+            break;
+        case Qt::Key_R:
+            resetWorld();
+            break;
+        }
+        break;
+    case GameState::EndGame:
+        break;
+    default:
         break;
     }
 }
@@ -414,14 +438,6 @@ void GameWindow::playerExplodes(Player *player)
     if(_particlesSystem[player->getId()-1]->animationDone())
         _particlesSystem[player->getId()-1]->initParticles(player->position());
     qDebug() << "player " << player->getId() << " crashed !";
-}
-
-void GameWindow::updateGame()
-{
-    for(Player &player : _player)
-    {
-        player.computeDirection();
-    }
 }
 
 void GameWindow::resetWorld()
