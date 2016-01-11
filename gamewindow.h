@@ -11,6 +11,12 @@
 #include "physic.h"
 #include "particles.h"
 
+enum GameState
+{
+    Menu,
+    Game,
+    EndGame
+};
 
 class GameWindow : public OpenGLWindow
 {
@@ -53,6 +59,11 @@ private:
     void initPlayerShaderPrograme();
     void initParticlesShaderPrograme();
     void initTailsShaderPrograme();
+
+    void renderMenu();
+    void renderGame();
+
+    GameState _gameState;
 
 public:
     GameWindow();
