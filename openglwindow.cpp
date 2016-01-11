@@ -135,7 +135,6 @@ void OpenGLWindow::renderNow()
     m_context->makeCurrent(this);
 
     if (needsInitialize) {
-        qDebug()<<"here";
         initializeOpenGLFunctions();
         initialize();
     }

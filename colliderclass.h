@@ -16,6 +16,7 @@ public:
 
 signals:
     void playerExplodes(Player*);
+    void destroyBody(b2Body*);
 };
 
 #endif // COLLIDERCLASS_H

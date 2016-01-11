@@ -54,6 +54,7 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     }
 
     connect(myWorld.getMyColliderInstance(),SIGNAL(playerExplodes(Player*)),this,SLOT(playerExplodes(Player*)));
+    connect(myWorld.getMyColliderInstance(),SIGNAL(destroyBody(b2Body*)),&myWorld,SLOT(addToBin(b2Body*)));
 
     initializeGame();
 }
@@ -67,6 +68,7 @@ void GameWindow::initialize()
     initPlayerShaderPrograme();
     initParticlesShaderPrograme();
     initTailsShaderPrograme();
+    initBorderShaderPrograme();
 }
 
 void GameWindow::initPlayerShaderPrograme()
@@ -160,6 +162,34 @@ void GameWindow::initTailsShaderPrograme()
 
     _tailsVao.release();
     _tailsProgram->release();
+}
+
+void GameWindow::initBorderShaderPrograme()
+{
+
+    _borderProgram = new QOpenGLShaderProgram(this);
+
+    _borderProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/border.vert");
+    _borderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/border.frag");
+
+    _borderProgram->link();
+
+    _borderPosAttr = _borderProgram->attributeLocation("posAttr");
+    _borderColUni = _borderProgram->uniformLocation("colUni");
+    _matrixUniform = _borderProgram->uniformLocation("matrix");
+
+    _borderVao.create();
+    _borderVao.bind();
+
+    _borderVbo.create();
+    _borderVbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    _borderVbo.bind();
+
+    _borderProgram->setAttributeBuffer(_borderPosAttr, GL_FLOAT, 0, 3, 0);
+    _borderProgram->enableAttributeArray(_borderPosAttr);
+
+    _borderVao.release();
+    _borderProgram->release();
 }
 
 void GameWindow::initializeGame()
@@ -304,6 +334,29 @@ void GameWindow::render(){
         _particlesVao.release();
         _particlesProgram->release();
     }
+
+    qDebug()<<"drawing border start";
+    _borderProgram->bind();
+        qDebug()<<"right here";
+    _borderProgram->setUniformValue(_matrixUniform, matrix);
+
+    _borderProgram->setUniformValue(_borderColUni, QVector4D(0.7,0.7,0.7,1));
+
+    _borderVao.bind();
+    _borderVbo.bind();
+
+    QVector<QVector3D> vec;
+    for (QVector2D v : _border->getPositions()) vec.push_back(QVector3D(v.x(), v.y(), 0.0));
+    size_t borderSize = vec.size()*sizeof(QVector3D);
+    _borderVbo.allocate(borderSize);
+    _borderVbo.write(0, vec.constData(), borderSize);
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDrawArrays(GL_POLYGON, 0, vec.size());
+
+    _borderVao.release();
+    _borderProgram->release();
+    qDebug()<<"drawing border end";
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)

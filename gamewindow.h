@@ -27,6 +27,7 @@ private:
     GLuint _playerPosAttr, _playerCenterUni, _playerColUni;
     GLuint _particlesPosAttr, _particlesColAttr;
     GLuint _tailsPosAttr, _tailsColAttr;
+    GLuint _borderPosAttr, _borderColUni;
     GLuint _matrixUniform;
 
     QOpenGLShaderProgram *_playerProgram;
@@ -41,6 +42,10 @@ private:
     QOpenGLVertexArrayObject _tailsVao;
     QOpenGLBuffer _tailsVbo;
 
+    QOpenGLShaderProgram *_borderProgram;
+    QOpenGLVertexArrayObject _borderVao;
+    QOpenGLBuffer _borderVbo;
+
     QTimer *_renderTimer;
     QTimer *_tailTimer;
     QTimer *_physicTimer;
@@ -53,6 +58,7 @@ private:
     void initPlayerShaderPrograme();
     void initParticlesShaderPrograme();
     void initTailsShaderPrograme();
+    void initBorderShaderPrograme();
 
 public:
     GameWindow();

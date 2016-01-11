@@ -4,5 +4,7 @@
         <file>player.vert</file>
         <file>tail.frag</file>
         <file>tail.vert</file>
+        <file>border.vert</file>
+        <file>border.frag</file>
     </qresource>
 </RCC>

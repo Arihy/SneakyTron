@@ -34,7 +34,6 @@ public:
     void initTail();
     void updateTail();
     void updateDirection();
-    void addToBin(b2Body *body);
     void resetWorldContent();
 
 
@@ -48,6 +47,7 @@ public:
 
 public slots:
     void tick();
+    void addToBin(b2Body *body);
 
 };
 
