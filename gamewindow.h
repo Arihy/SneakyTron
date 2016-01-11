@@ -20,7 +20,7 @@ private:
 
     GLuint loadShader(GLenum type, const char *source);
     QVector<Player> _player;
-    QVector<Border*> _border;
+    Border* _border;
     QVector<QVector4D> _colorList;
     QVector<Particles *> _particlesSystem;
 
@@ -60,7 +60,11 @@ public:
     void render();
     void initialize();
     void updateGame();
+    void resetWorld();
 
+
+    Border *border() const;
+    void setBorder(Border *border);
 
 public slots:
     void updateTails();

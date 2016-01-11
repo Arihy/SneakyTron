@@ -16,8 +16,8 @@ class Physic : public QObject
     Q_OBJECT
 private :
     b2World _world;
-    QVector<Border *> _borders;
-    b2Body* _borderBody[NB_BOUNDARY];
+    Border *_border;
+    b2Body* _borderBody;
     QVector<Player *> _players;
     QVector<b2Body *> _playersBody;
     QVector<b2Body *> _tailsBody;
@@ -41,12 +41,10 @@ public:
 
     QVector<Player *> players() const;
     void setPlayers(const QVector<Player *> &players);
-    QVector<Border *> borders() const;
-    void setBorders(const QVector<Border *> &borders);
-
     ColliderClass* getMyColliderInstance();
-
     b2World* getWorld() ;
+    Border *getBorder() const;
+    void setBorder(Border *border);
 
 public slots:
     void tick();

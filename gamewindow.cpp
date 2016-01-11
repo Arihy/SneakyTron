@@ -175,13 +175,11 @@ void GameWindow::initializeGame()
         temp<< &_player[i];
     }
 
-    _border.clear();
-    _border.push_back(new Border(QVector2D(HALF_DIM_BOARD,0.0f), QVector2D(0.1f,HALF_DIM_BOARD)));
-    _border.push_back(new Border(QVector2D(0.0f,HALF_DIM_BOARD), QVector2D(HALF_DIM_BOARD,0.1f)));
-    _border.push_back(new Border(QVector2D(-HALF_DIM_BOARD,0.0f), QVector2D(0.1f,HALF_DIM_BOARD)));
-    _border.push_back(new Border(QVector2D(0.0f,-HALF_DIM_BOARD), QVector2D(HALF_DIM_BOARD,0.1f)));
+    QVector< QVector2D> vec;
+    vec<<QVector2D(-1,-1)<<QVector2D(-1,1)<<QVector2D(1,1)<<QVector2D(1,-1);
+    _border = new Border(vec);
 
-    myWorld.setBorders(_border);
+    myWorld.setBorder(_border);
     myWorld.setPlayers(temp);
     myWorld.init();
 
@@ -209,6 +207,16 @@ GLuint GameWindow::loadShader(GLenum type, const char *source)
     return shader;
 }
 
+Border *GameWindow::border() const
+{
+    return _border;
+}
+
+void GameWindow::setBorder(Border *border)
+{
+    _border = border;
+}
+
 
 void GameWindow::render(){
     const qreal retinaScale = devicePixelRatio();
@@ -234,13 +242,13 @@ void GameWindow::render(){
         _playerVbo.bind();
 
         QVector<QVector3D> playerShape;
-        QVector3D cornerDistanceToCenter = 30*QVector3D(0.01f, 0.01f, 0.0f);
+        QVector3D cornerDistanceToCenter = QVector3D(0.01f, 0.01f, 0.0f);
         playerShape << cornerDistanceToCenter +player.position();
-        cornerDistanceToCenter = 30*QVector3D(0.01f, -0.01f, 0.0f);
+        cornerDistanceToCenter = QVector3D(0.01f, -0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
-        cornerDistanceToCenter = 30*QVector3D(-0.01f, -0.01f, 0.0f);
+        cornerDistanceToCenter = QVector3D(-0.01f, -0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
-        cornerDistanceToCenter =30* QVector3D(-0.01f, 0.01f, 0.0f);
+        cornerDistanceToCenter = QVector3D(-0.01f, 0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
 
         size_t posSize = playerShape.size() * sizeof(QVector3D);
@@ -311,10 +319,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         close();
         break;
     case Qt::Key_R:
-        myWorld.resetWorldContent();
-        QTimer* endTimer;
-        endTimer->singleShot(35,&myWorld, SLOT(tick()));
-        endTimer->singleShot(35,this, SLOT(initializeGame()));
+        resetWorld();
         break;
     }
 }
@@ -342,5 +347,13 @@ void GameWindow::updateGame()
     {
         player.computeDirection();
     }
+}
+
+void GameWindow::resetWorld()
+{
+    myWorld.resetWorldContent();
+    QTimer* endTimer;
+    endTimer->singleShot(35,&myWorld, SLOT(tick()));
+    endTimer->singleShot(35,this, SLOT(initializeGame()));
 }
 

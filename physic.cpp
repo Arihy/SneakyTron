@@ -10,16 +10,6 @@ void Physic::setPlayers(const QVector<Player *> &players)
     this->_players = players;
 }
 
-QVector<Border *> Physic::borders() const
-{
-    return _borders;
-}
-
-void Physic::setBorders(const QVector<Border *> &borders)
-{
-    _borders = borders;
-}
-
 ColliderClass* Physic::getMyColliderInstance()
 {
     return &myColliderInstance;
@@ -28,6 +18,16 @@ ColliderClass* Physic::getMyColliderInstance()
 b2World *Physic::getWorld()
 {
     return &_world;
+}
+
+Border *Physic::getBorder() const
+{
+    return _border;
+}
+
+void Physic::setBorder(Border *border)
+{
+    _border = border;
 }
 
 Physic::Physic():_world(b2Vec2(0.0f, 0.0f))
@@ -50,16 +50,17 @@ void Physic::init(){
 void Physic::initBorder()
 {
     b2BodyDef borderBodyDef;
-    b2PolygonShape borderBox;
-    for (int i=0; i<_borders.size();i++)
-    {
-        borderBodyDef.position.Set(_borders[i]->position().x(), _borders[i]->position().y());
-        borderBodyDef.type = b2_staticBody;
-        _borderBody[i] = _world.CreateBody(&borderBodyDef);
-        borderBox.SetAsBox(_borders[i]->dimension().x(), _borders[i]->dimension().y());
-        _borderBody[i]->CreateFixture(&borderBox, 1.0f);
-        _borderBody[i]->SetUserData(_borders[i]);
-    }
+    borderBodyDef.type = b2_staticBody;
+    b2ChainShape chain;
+    std::vector<b2Vec2> vec;
+    for (QVector2D v : _border->getPositions())
+        vec.push_back(b2Vec2(v.x(),v.y()));
+    chain.CreateLoop(&vec[0], vec.size());
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &chain;
+    _borderBody = _world.CreateBody(&borderBodyDef);
+    _borderBody->CreateFixture(&fixtureDef);
+    _borderBody->SetUserData(_border);
 }
 
 void Physic::initPlayer()

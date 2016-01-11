@@ -3,10 +3,11 @@
 Border::Border()
 {}
 
-Border::Border(QVector2D pos, QVector2D dim)
+
+
+Border::Border(QVector<QVector2D> pos)
 {
-    this->_position = pos;
-    this->_dimension = dim;
+    _positions = pos;
 }
 
 EntityType Border::getEntityType()
@@ -14,23 +15,13 @@ EntityType Border::getEntityType()
     return BORDER;
 }
 
-QVector2D Border::position() const
+QVector<QVector2D> Border::getPositions() const
 {
-    return _position;
+    return _positions;
 }
 
-void Border::setPosition(const QVector2D &position)
+void Border::setPositions(const QVector<QVector2D> &positions)
 {
-    _position = position;
-}
-
-QVector2D Border::dimension() const
-{
-    return _dimension;
-}
-
-void Border::setDimension(const QVector2D &dimension)
-{
-    _dimension = dimension;
+    _positions = positions;
 }
 

@@ -1,28 +1,27 @@
 #ifndef BORDER_H
 #define BORDER_H
-
-#include "entity.h"
+#include <entity.h>
+#include <QVector>
 #include <QVector2D>
 
-static const int NB_BOUNDARY = 4;
+
 
 class Border : public Entity
 {
 public:
     Border();
-    Border(QVector2D pos, QVector2D dim);
+
+    Border(QVector<QVector2D> pos);
 
     EntityType getEntityType() override;
 
-    QVector2D position() const;
-    void setPosition(const QVector2D &position);
 
-    QVector2D dimension() const;
-    void setDimension(const QVector2D &dimension);
+    QVector<QVector2D> getPositions() const;
+    void setPositions(const QVector<QVector2D> &positions);
 
 private:
-    QVector2D _position;
-    QVector2D _dimension;
+
+    QVector<QVector2D> _positions;
 };
 
 #endif // BORDER_H
