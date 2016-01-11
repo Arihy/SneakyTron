@@ -272,8 +272,6 @@ void GameWindow::renderMenu()
 void GameWindow::renderGame()
 {
     QMatrix4x4 matrix;
-//    matrix.perspective(50.0f, 16.0f/9.0f, 0.1f, 100.0f);
-//    matrix.translate(0, 0, -2);
 
     for(Player &player : _player)
     {
@@ -379,14 +377,11 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         switch(event->key())
         {
         case Qt::Key_Escape:
-            qDebug() << "exit game !";
             close();
             break;
         case Qt::Key_Return:
-            qDebug() << "begin game !! ";
             startWorld();
             QTimer::singleShot(37,this,SLOT(switchGameMenu()));
-            qDebug()<<"game !";
             break;
         }
         break;
@@ -401,7 +396,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Escape:
             destroyWorld();
             QTimer::singleShot(37,this,SLOT(switchGameMenu()));
-            qDebug()<<"menu !";
             break;
         case Qt::Key_R:
             destroyWorld();
@@ -430,7 +424,6 @@ void GameWindow::playerExplodes(Player *player)
 {
     if(_particlesSystem[player->getId()-1]->animationDone())
         _particlesSystem[player->getId()-1]->initParticles(player->position());
-    qDebug() << "player " << player->getId() << " crashed !";
 }
 
 

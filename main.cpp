@@ -10,14 +10,13 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     //at global scope
 
-
     QSurfaceFormat format;
     format.setSamples(16);
 
     GameWindow window;
     window.setFormat(format);
 
-    window.resize(1024, 751);
+    window.resize(800, 800);
     window.show();
 
     window.setAnimating(false);
