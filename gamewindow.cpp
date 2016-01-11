@@ -280,8 +280,8 @@ void GameWindow::renderMenu()
 void GameWindow::renderGame()
 {
     QMatrix4x4 matrix;
-    matrix.perspective(50.0f, 16.0f/9.0f, 0.1f, 100.0f);
-    matrix.translate(0, 0, -2);
+//    matrix.perspective(50.0f, 16.0f/9.0f, 0.1f, 100.0f);
+//    matrix.translate(0, 0, -2);
 
     for(Player &player : _player)
     {
@@ -357,9 +357,7 @@ void GameWindow::renderGame()
         _particlesProgram->release();
     }
 
-    qDebug()<<"drawing border start";
     _borderProgram->bind();
-        qDebug()<<"right here";
     _borderProgram->setUniformValue(_matrixUniform, matrix);
 
     _borderProgram->setUniformValue(_borderColUni, QVector4D(0.7,0.7,0.7,1));
@@ -375,10 +373,10 @@ void GameWindow::renderGame()
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDrawArrays(GL_POLYGON, 0, vec.size());
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
     _borderVao.release();
     _borderProgram->release();
-    qDebug()<<"drawing border end";
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
