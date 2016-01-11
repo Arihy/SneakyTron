@@ -37,7 +37,7 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     _particlesSystem.push_back(new Particles(QVector4D(0.2, 0.2, 1.0, 1.0)));
     _particlesSystem.push_back(new Particles(QVector4D(1.0, 1.0, 0.2, 1.0)));
 
-
+    _gameState = GameState::Game;
 
     _physicTimer = new QTimer();
     connect(_physicTimer, SIGNAL(timeout()), &myWorld, SLOT(tick()));
@@ -257,6 +257,28 @@ void GameWindow::render(){
 
     glClearColor(0.1, 0.1, 0.1, 1.0);
 
+    switch(_gameState)
+    {
+    case GameState::Menu:
+        renderMenu();
+        break;
+    case GameState::Game:
+        renderGame();
+        break;
+    case GameState::EndGame:
+        break;
+    default:
+        break;
+    }
+}
+
+void GameWindow::renderMenu()
+{
+
+}
+
+void GameWindow::renderGame()
+{
     QMatrix4x4 matrix;
     matrix.perspective(50.0f, 16.0f/9.0f, 0.1f, 100.0f);
     matrix.translate(0, 0, -2);
