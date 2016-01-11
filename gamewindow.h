@@ -76,7 +76,8 @@ public:
     ~GameWindow();
     void render();
     void initialize();
-    void resetWorld();
+    void startWorld();
+    void destroyWorld();
 
 
     Border *border() const;
@@ -86,6 +87,7 @@ public slots:
     void updateTails();
     void playerExplodes(Player *player);
     void initializeGame();
+    void switchGameMenu();
 };
 
 #endif // GAMEWINDOW_H

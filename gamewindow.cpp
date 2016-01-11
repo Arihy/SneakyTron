@@ -71,6 +71,7 @@ void GameWindow::initialize()
     initBorderShaderPrograme();
 }
 
+
 void GameWindow::initPlayerShaderPrograme()
 {
     _playerProgram = new QOpenGLShaderProgram(this);
@@ -214,20 +215,11 @@ void GameWindow::initializeGame()
     myWorld.init();
 
     _physicTimer->start(30);
-
     _renderTimer->start(30);
-
     _tailTimer->start(30);
 
 }
 
-void GameWindow::updateTails()
-{
-    for(Player &player : _player)
-    {
-        player.updateTail();
-    }
-}
 
 GLuint GameWindow::loadShader(GLenum type, const char *source)
 {
@@ -392,8 +384,9 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
             break;
         case Qt::Key_Return:
             qDebug() << "begin game !! ";
-            initializeGame();
-            _gameState = GameState::Game;
+            startWorld();
+            QTimer::singleShot(37,this,SLOT(switchGameMenu()));
+            qDebug()<<"game !";
             break;
         }
         break;
@@ -406,11 +399,13 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         switch(event->key())
         {
         case Qt::Key_Escape:
-            resetWorld();
-            _gameState = GameState::Menu;
+            destroyWorld();
+            QTimer::singleShot(37,this,SLOT(switchGameMenu()));
+            qDebug()<<"menu !";
             break;
         case Qt::Key_R:
-            resetWorld();
+            destroyWorld();
+            startWorld();
             break;
         }
         break;
@@ -438,11 +433,28 @@ void GameWindow::playerExplodes(Player *player)
     qDebug() << "player " << player->getId() << " crashed !";
 }
 
-void GameWindow::resetWorld()
+
+void GameWindow::startWorld()
+{
+   QTimer::singleShot(35,this, SLOT(initializeGame()));
+}
+
+void GameWindow::destroyWorld()
 {
     myWorld.resetWorldContent();
-    QTimer* endTimer;
-    endTimer->singleShot(35,&myWorld, SLOT(tick()));
-    endTimer->singleShot(35,this, SLOT(initializeGame()));
+    QTimer::singleShot(35,&myWorld, SLOT(tick()));
+}
+
+void GameWindow::switchGameMenu()
+{
+    (_gameState==Menu) ? _gameState = Game : _gameState = Menu;
+}
+
+void GameWindow::updateTails()
+{
+    for(Player &player : _player)
+    {
+        player.updateTail();
+    }
 }
 
