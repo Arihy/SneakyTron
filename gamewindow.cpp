@@ -234,13 +234,13 @@ void GameWindow::render(){
         _playerVbo.bind();
 
         QVector<QVector3D> playerShape;
-        QVector3D cornerDistanceToCenter = 30*QVector3D(0.01f, 0.01f, 0.0f);
+        QVector3D cornerDistanceToCenter = QVector3D(0.01f, 0.01f, 0.0f);
         playerShape << cornerDistanceToCenter +player.position();
-        cornerDistanceToCenter = 30*QVector3D(0.01f, -0.01f, 0.0f);
+        cornerDistanceToCenter = QVector3D(0.01f, -0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
-        cornerDistanceToCenter = 30*QVector3D(-0.01f, -0.01f, 0.0f);
+        cornerDistanceToCenter = QVector3D(-0.01f, -0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
-        cornerDistanceToCenter =30* QVector3D(-0.01f, 0.01f, 0.0f);
+        cornerDistanceToCenter = QVector3D(-0.01f, 0.01f, 0.0f);
         playerShape << cornerDistanceToCenter+player.position();
 
         size_t posSize = playerShape.size() * sizeof(QVector3D);
@@ -312,7 +312,7 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_R:
         myWorld.resetWorldContent();
-        QTimer* endTimer;
+        QTimer* endTimer = new QTimer();
         endTimer->singleShot(35,&myWorld, SLOT(tick()));
         endTimer->singleShot(35,this, SLOT(initializeGame()));
         break;

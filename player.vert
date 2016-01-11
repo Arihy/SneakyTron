@@ -13,6 +13,4 @@ void main()
         col = colUni;
     else
         col = vec4(0.6, 0.6, 0.6, 0.8);
-
-
 }
