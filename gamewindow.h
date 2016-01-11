@@ -76,7 +76,6 @@ public:
     ~GameWindow();
     void render();
     void initialize();
-    void updateGame();
     void resetWorld();
 
 
