@@ -313,6 +313,7 @@ void GameWindow::renderGame()
 
     for(Player &player : _player)
     {
+        if (!player.getAlive()) continue;
         _playerProgram->bind();
         _playerProgram->setUniformValue(_matrixUniform, matrix);
         _playerProgram->setUniformValue(_playerColUni, player.color());
@@ -343,6 +344,7 @@ void GameWindow::renderGame()
 
     for(Player player : _player)
     {
+        if (!player.getAlive()) continue;
         _tailsProgram->bind();
         _tailsProgram->setUniformValue(_matrixUniform, matrix);
 
