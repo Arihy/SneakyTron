@@ -6,5 +6,7 @@
         <file>tail.vert</file>
         <file>border.vert</file>
         <file>border.frag</file>
+        <file>bonus.vert</file>
+        <file>bonus.frag</file>
     </qresource>
 </RCC>

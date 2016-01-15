@@ -53,6 +53,8 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
         connect(_renderTimer, SIGNAL(timeout()), p, SLOT(update()));
     }
 
+    connect(_renderTimer, SIGNAL(timeout()), &_bonus, SLOT(update()));
+
     connect(myWorld.getMyColliderInstance(),SIGNAL(playerExplodes(Player*)),this,SLOT(playerExplodes(Player*)));
     connect(myWorld.getMyColliderInstance(),SIGNAL(destroyBody(b2Body*)),&myWorld,SLOT(addToBin(b2Body*)));
 
@@ -69,6 +71,7 @@ void GameWindow::initialize()
     initParticlesShaderPrograme();
     initTailsShaderPrograme();
     initBorderShaderPrograme();
+    initBonusShaderPrograme();
 }
 
 
@@ -191,6 +194,37 @@ void GameWindow::initBorderShaderPrograme()
 
     _borderVao.release();
     _borderProgram->release();
+}
+
+void GameWindow::initBonusShaderPrograme()
+{
+    _bonusProgram = new QOpenGLShaderProgram(this);
+
+    _bonusProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/bonus.vert");
+    _bonusProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/bonus.frag");
+
+    _bonusProgram->link();
+
+    _bonusPosAttr = _bonusProgram->attributeLocation("posAttr");
+    _bonusColAttr = _bonusProgram->attributeLocation("colAttr");
+    _matrixUniform = _bonusProgram->uniformLocation("matrix");
+
+    _bonusVao.create();
+    _bonusVao.bind();
+
+    _bonusVbo.create();
+    _bonusVbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    _bonusVbo.bind();
+
+    size_t bonusPosSize = _bonus.getPositions().size()*sizeof(QVector3D);
+
+    _bonusProgram->setAttributeBuffer(_bonusPosAttr, GL_FLOAT, 0, 3, 0);
+    _bonusProgram->setAttributeBuffer(_bonusColAttr, GL_FLOAT, bonusPosSize, 4, 0);
+    _bonusProgram->enableAttributeArray(_bonusPosAttr);
+    _bonusProgram->enableAttributeArray(_bonusColAttr);
+
+    _bonusVao.release();
+    _bonusProgram->release();
 }
 
 void GameWindow::initializeGame()
@@ -367,6 +401,23 @@ void GameWindow::renderGame()
 
     _borderVao.release();
     _borderProgram->release();
+
+    _bonusProgram->bind();
+    _bonusProgram->setUniformValue(_matrixUniform, matrix);
+
+    _bonusVao.bind();
+    _bonusVbo.bind();
+
+    size_t bonusPosSize = _bonus.getPositions().size()*sizeof(QVector3D), bonusColSize = _bonus.getColors().size()*sizeof(QVector4D);
+
+    _bonusVbo.allocate(bonusPosSize + bonusColSize);
+    _bonusVbo.write(0, _bonus.getPositions().constData(), bonusPosSize);
+    _bonusVbo.write(bonusPosSize, _bonus.getColors().constData(), bonusColSize);
+
+    glDrawArrays(GL_POINTS, 0, _bonus.getPositions().size());
+
+    _bonusVao.release();
+    _bonusProgram->release();
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
