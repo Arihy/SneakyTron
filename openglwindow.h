@@ -66,6 +66,8 @@ public:
 
     void setAnimating(bool animating);
 
+    QOpenGLPaintDevice *m_device;
+
 public slots:
     void renderLater();
     void renderNow();
@@ -80,7 +82,6 @@ private:
     bool m_animating;
 
     QOpenGLContext *m_context;
-    QOpenGLPaintDevice *m_device;
 };
 //! [1]
 

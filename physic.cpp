@@ -171,7 +171,7 @@ void Physic::updateDirection()
 void Physic::tick()
 {
     if (_binBodies.size()!=0){
-               qDebug()<<"its apo of size : "<<_binBodies.size();
+       // qDebug()<<"its apo of size : "<<_binBodies.size();
         for (b2Body* body : _binBodies) _world.DestroyBody(body);
         _binBodies.clear();
     }
@@ -191,7 +191,7 @@ void Physic::tick()
 player->getBody()->SetLinearVelocity(10*b2Vec2(player->direction().x()*player->moveSpeed(),player->direction().y()*player->moveSpeed()));
 
          }
-    qDebug()<<"crash here ?";
+
     _world.Step(timeStep, velocityIterations, positionIterations);
     for (Player* player : _players){
         b2Vec2 position = player->getBody()->GetPosition();

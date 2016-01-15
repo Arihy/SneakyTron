@@ -59,6 +59,7 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
     connect(myWorld.getMyColliderInstance(),SIGNAL(destroyBody(b2Body*)),&myWorld,SLOT(addToBin(b2Body*)));
 
     //initializeGame();
+    endGame = false;
 }
 
 GameWindow::~GameWindow()
@@ -295,8 +296,6 @@ void GameWindow::render(){
     case GameState::Game:
         renderGame();
         break;
-    case GameState::EndGame:
-        break;
     default:
         break;
     }
@@ -304,7 +303,46 @@ void GameWindow::render(){
 
 void GameWindow::renderMenu()
 {
+    if (!m_device)
+        m_device = new QOpenGLPaintDevice;
 
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    m_device->setSize(size());
+
+    QPainter painter(m_device);
+    painter.setFont(QFont("Arial", 80));
+    painter.setPen(Qt::blue);
+    painter.drawText(0, 0, 600, 500, Qt::AlignTop, "SneakyTron");
+    painter.setFont(QFont("Arial", 40));
+    painter.drawText(0, 0, 800, 500, Qt::AlignBottom, "Press enter to start !");
+    painter.end();
+}
+
+void GameWindow::renderEnd()
+{
+    if (!m_device)
+        m_device = new QOpenGLPaintDevice;
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    m_device->setSize(size());
+
+    QPainter painter(m_device);
+    painter.setFont(QFont("Arial", 80));
+
+    for(Player player : _player)
+    {
+        if(player.getAlive())
+        {
+            QVector4D color = player.color();
+            QColor c = QColor(color.x(), color.y(), color.z());
+            painter.setPen(c);
+        }
+    }
+    //painter.setPen(Qt::yellow);
+    painter.drawText(0, 0, 600, 500, Qt::AlignTop, "Victory !");
+    painter.end();
 }
 
 void GameWindow::renderGame()
@@ -461,6 +499,12 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         }
         break;
     case GameState::EndGame:
+        switch(event->key())
+        {
+        case Qt::Key_Escape:
+            close();
+            break;
+        }
         break;
     default:
         break;
@@ -479,15 +523,16 @@ void GameWindow::keyReleaseEvent(QKeyEvent *event)
 
 void GameWindow::playerExplodes(Player *player)
 {
+    static int cpt = 0;
+    cpt++;
+    if(cpt >= NB_PLAYER - 1)
+        endGame = true;
     if(_particlesSystem[player->getId()-1]->animationDone())
         _particlesSystem[player->getId()-1]->initParticles(player->position());
-//    myWorld.addToBin(myWorld.getPlayersBody()[player->getId()-1]);
-//    myWorld.addToBin(myWorld.getTailsBody()[player->getId()-1]);
-        myWorld.addToBin(player->getBody());
-        myWorld.addToBin(player->tail()->getBody());
- //       qDebug()<<myWorld.players().removeOne(player);
-        player->setAlive(false);
-        qDebug()<<myWorld.getWorld()->GetBodyCount();
+    myWorld.addToBin(player->getBody());
+    myWorld.addToBin(player->tail()->getBody());
+    player->setAlive(false);
+    qDebug()<<myWorld.getWorld()->GetBodyCount();
 
 }
 

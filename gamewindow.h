@@ -76,8 +76,11 @@ private:
 
     void renderMenu();
     void renderGame();
+    void renderEnd();
 
     GameState _gameState;
+
+    bool endGame;
 
 public:
     GameWindow();
