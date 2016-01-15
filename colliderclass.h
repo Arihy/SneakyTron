@@ -4,6 +4,7 @@
 #include "Box2D/Box2D.h"
 #include <QDebug>
 #include "player.h"
+#include "food.h"
 
 class ColliderClass : public QObject, public b2ContactListener
 {
@@ -17,6 +18,7 @@ public:
 signals:
     void playerExplodes(Player*);
     void destroyBody(b2Body*);
+    void playerGetFood(Player*);
 };
 
 #endif // COLLIDERCLASS_H

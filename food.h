@@ -4,13 +4,18 @@
 #include <QVector3D>
 #include <QVector4D>
 
-class Food
+#include "entity.h"
+#include "Box2D/Box2D.h"
+
+
+class Food : public Entity
 {
 private:
     QVector3D _position;
     float _lifetime;
     float _timer;
     QVector4D _color;
+    b2Body *_body;
 
 public:
     Food();
@@ -22,8 +27,12 @@ public:
 
     float lifetime() const;
 
+    EntityType getEntityType() override;
+
     float timer() const;
     void updateTimer();
+    b2Body *getBody() ;
+    void setBody(b2Body *body);
 };
 
 #endif // FOOD_H

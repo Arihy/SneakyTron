@@ -20,8 +20,18 @@ void ColliderClass::CheckPlayerCollision(Entity* bodyUserAData, Entity* bodyUser
             (bodyUserAData->getEntityType() == PLAYER && bodyUserBData->getEntityType() == PLAYER) ||
             (bodyUserAData->getEntityType() == PLAYER && bodyUserBData->getEntityType() == TAIL))
     {
+        qDebug()<<"in collider"<<(int) bodyUserBData->getEntityType();
         Player *player = static_cast<Player*> (bodyUserAData);
         emit playerExplodes(player);
+    }
+
+    if((bodyUserAData->getEntityType() == PLAYER && bodyUserBData->getEntityType() == FOOD))
+    {
+        qDebug()<<"in collider"<<(int) bodyUserBData->getEntityType();
+        Player *player = static_cast<Player*> (bodyUserAData);
+        Food *food = static_cast<Food *> (bodyUserBData);
+        emit destroyBody(food->getBody());
+        qDebug()<<"here B";
     }
 }
 

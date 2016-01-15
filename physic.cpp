@@ -117,7 +117,31 @@ void Physic::initTail(){
         _tailsBody.last()->SetUserData(player->tail());
         player->tail()->setBody(_tailsBody.last());
     }
+}
 
+void Physic::addFood(Food *food)
+{
+    b2CircleShape bonusShape;
+     bonusShape.m_p.Set(0, 0); //position, relative to body position
+     bonusShape.m_radius = PLAYER_RADIUS; // radius
+
+     b2FixtureDef bonusFixtureDef;
+     bonusFixtureDef.shape=&bonusShape;
+     bonusFixtureDef.density=0;
+
+     b2BodyDef bonusBodyDef;
+     bonusBodyDef.type = b2_dynamicBody;
+
+     bonusBodyDef.position.Set( food->position().x()  ,food->position().y());
+     _bonusBody<<_world.CreateBody(&bonusBodyDef);
+     _bonusBody.last()->CreateFixture(&bonusFixtureDef);
+     _bonusBody.last()->SetUserData( food); // Bind du body avec l'objet bonus
+     food->setBody(_bonusBody.last()); // Bind du bonus avec le body ..
+
+}
+
+void Physic::deleteFood(Food *foot)
+{
 
 }
 
@@ -188,9 +212,8 @@ void Physic::tick()
 
     updateDirection();
     for (Player* player : _players){
-player->getBody()->SetLinearVelocity(10*b2Vec2(player->direction().x()*player->moveSpeed(),player->direction().y()*player->moveSpeed()));
-
-         }
+        player->getBody()->SetLinearVelocity(10*b2Vec2(player->direction().x()*player->moveSpeed(),player->direction().y()*player->moveSpeed()));
+    }
 
     _world.Step(timeStep, velocityIterations, positionIterations);
     for (Player* player : _players){
