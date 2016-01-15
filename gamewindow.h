@@ -5,6 +5,7 @@
 #include <QtGui>
 #include <QTimer>
 
+
 #include "openglwindow.h"
 #include "player.h"
 #include "border.h"
@@ -23,7 +24,6 @@ class GameWindow : public OpenGLWindow
     Q_OBJECT
 private:
     Physic myWorld;
-
     GLuint loadShader(GLenum type, const char *source);
     QVector<Player> _player;
     Border* _border;

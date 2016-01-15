@@ -1,6 +1,6 @@
 #include "physic.h"
 
-QVector<Player *> Physic::players() const
+QVector<Player *> Physic::players()
 {
     return _players;
 }
@@ -28,6 +28,26 @@ Border *Physic::getBorder() const
 void Physic::setBorder(Border *border)
 {
     _border = border;
+}
+
+QVector<b2Body *> Physic::getPlayersBody()
+{
+    return _playersBody;
+}
+
+void Physic::setPlayersBody(const QVector<b2Body *> &playersBody)
+{
+    _playersBody = playersBody;
+}
+
+QVector<b2Body *> Physic::getTailsBody()
+{
+    return _tailsBody;
+}
+
+void Physic::setTailsBody(const QVector<b2Body *> &tailsBody)
+{
+    _tailsBody = tailsBody;
 }
 
 Physic::Physic():_world(b2Vec2(0.0f, 0.0f))
@@ -83,6 +103,7 @@ void Physic::initPlayer()
         _playersBody<<_world.CreateBody(&playerBodyDef);
         _playersBody[i]->CreateFixture(&playerFixtureDef);
         _playersBody[i]->SetUserData( _players[i]); // Bind du body avec l'objet player
+        _players[i]->setBody(_playersBody[i]); // Bind du player avec le body ..
     }
 }
 
@@ -94,6 +115,7 @@ void Physic::initTail(){
     {
         _tailsBody<<_world.CreateBody(&tailBodyDef);
         _tailsBody.last()->SetUserData(player->tail());
+        player->tail()->setBody(_tailsBody.last());
     }
 
 
@@ -107,8 +129,10 @@ void Physic::updateTail()
     QVector<QVector3D> tmp, tmp2;
     Tail* tail;
 
-    for(b2Body * body : _tailsBody)
+    for (Player *player : _players)
     {
+        b2Body * body =player->tail()->getBody();
+        if (!player->getAlive()) continue;
         b2Fixture *fixtureA = body->GetFixtureList();
         if (fixtureA!=NULL) body->DestroyFixture(fixtureA);
         tmp.clear();
@@ -134,8 +158,6 @@ void Physic::updateTail()
         fixtureDef.shape = &chain;
         body->CreateFixture(&fixtureDef);
     }
-
-
 }
 
 void Physic::updateDirection()
@@ -149,7 +171,7 @@ void Physic::updateDirection()
 void Physic::tick()
 {
     if (_binBodies.size()!=0){
-               qDebug()<<"its apo";
+               qDebug()<<"its apo of size : "<<_binBodies.size();
         for (b2Body* body : _binBodies) _world.DestroyBody(body);
         _binBodies.clear();
     }
@@ -165,19 +187,16 @@ void Physic::tick()
     int32 positionIterations = 2;
 
     updateDirection();
+    for (Player* player : _players){
+player->getBody()->SetLinearVelocity(10*b2Vec2(player->direction().x()*player->moveSpeed(),player->direction().y()*player->moveSpeed()));
 
-    for (int i=0 ;i <_playersBody.size();i++)
-    {
-        _playersBody[i]->SetLinearVelocity(10*b2Vec2(_players[i]->direction().x()*_players[i]->moveSpeed(),_players[i]->direction().y()*_players[i]->moveSpeed()));
-    }
+         }
+    qDebug()<<"crash here ?";
     _world.Step(timeStep, velocityIterations, positionIterations);
-
-    for (int i=0 ;i <_playersBody.size();i++)
-    {
-        b2Vec2 position = _playersBody[i]->GetPosition();
-        _players[i]->setPosition(QVector3D(position.x, position.y, 0));
+    for (Player* player : _players){
+        b2Vec2 position = player->getBody()->GetPosition();
+        player->setPosition(QVector3D(position.x, position.y, 0));
     }
-
     updateTail();
 
 

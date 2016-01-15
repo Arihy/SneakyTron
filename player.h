@@ -10,6 +10,7 @@
 #include "entity.h"
 #include "tail.h"
 #include "utils.h"
+#include <Box2D/Box2D.h>
 
 static const int TAIL_LEN_MAX = 100;
 
@@ -17,6 +18,7 @@ static const int TAIL_LEN_MAX = 100;
 class Player : public Entity
 {
 private:
+    b2Body* _body;
     int _id;
     QVector3D _position;
     float _moveSpeed;
@@ -28,6 +30,7 @@ private:
     bool _rotateRight;
     QVector<Qt::Key> _controller;
     float _angle;
+    bool alive = true;
 
     void rotate();
 
@@ -60,6 +63,10 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
+    b2Body *getBody();
+    void setBody(b2Body *body);
+    bool getAlive() const;
+    void setAlive(bool value);
 };
 
 #endif // PLAYER_H

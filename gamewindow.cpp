@@ -165,6 +165,8 @@ void GameWindow::initTailsShaderPrograme()
     _tailsProgram->release();
 }
 
+
+
 void GameWindow::initBorderShaderPrograme()
 {
 
@@ -195,7 +197,9 @@ void GameWindow::initBorderShaderPrograme()
 
 void GameWindow::initializeGame()
 {
+
     _player.clear();
+
     for(int i = 0; i < NB_PLAYER; i++)
     {
         _player.push_back(Player(i + 1,_controller[i], QVector3D((-HALF_DIM_BOARD+0.2)+((2*HALF_DIM_BOARD-0.4)/(NB_PLAYER+1))*(i), -HALF_DIM_BOARD+0.3, 0), _colorList[i]));
@@ -205,6 +209,7 @@ void GameWindow::initializeGame()
     for (int i=0 ;i <_player.size();i++){
         temp<< &_player[i];
     }
+
 
     QVector< QVector2D> vec;
     vec<<QVector2D(-1,-1)<<QVector2D(-1,1)<<QVector2D(1,1)<<QVector2D(1,-1);
@@ -217,7 +222,6 @@ void GameWindow::initializeGame()
     _physicTimer->start(30);
     _renderTimer->start(30);
     _tailTimer->start(30);
-
 }
 
 
@@ -424,6 +428,14 @@ void GameWindow::playerExplodes(Player *player)
 {
     if(_particlesSystem[player->getId()-1]->animationDone())
         _particlesSystem[player->getId()-1]->initParticles(player->position());
+//    myWorld.addToBin(myWorld.getPlayersBody()[player->getId()-1]);
+//    myWorld.addToBin(myWorld.getTailsBody()[player->getId()-1]);
+        myWorld.addToBin(player->getBody());
+        myWorld.addToBin(player->tail()->getBody());
+ //       qDebug()<<myWorld.players().removeOne(player);
+        player->setAlive(false);
+        qDebug()<<myWorld.getWorld()->GetBodyCount();
+
 }
 
 

@@ -11,6 +11,16 @@ void Tail::setChain(const QVector<QVector3D> &chain)
 }
 
 
+b2Body *Tail::getBody()
+{
+    return body;
+}
+
+void Tail::setBody(b2Body *value)
+{
+    body = value;
+}
+
 Tail::Tail()
 {
     
