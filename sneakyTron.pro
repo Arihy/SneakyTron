@@ -65,7 +65,9 @@ SOURCES += main.cpp \
     tail.cpp \
     particle.cpp \
     particles.cpp \
-    utils.cpp
+    utils.cpp \
+    food.cpp \
+    bonus.cpp
 
 
 HEADERS  += \
@@ -126,7 +128,9 @@ HEADERS  += \
     tail.h \
     particle.h \
     particles.h \
-    utils.h
+    utils.h \
+    food.h \
+    bonus.h
 
 
 RESOURCES += gestionnaire.qrc
@@ -135,4 +139,6 @@ DISTFILES += \
     player.frag \
     player.vert \
     border.frag \
-    border.vert
+    border.vert \
+    bonus.frag \
+    bonus.vert

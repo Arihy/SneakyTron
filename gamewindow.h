@@ -11,6 +11,7 @@
 #include "border.h"
 #include "physic.h"
 #include "particles.h"
+#include "bonus.h"
 
 enum GameState
 {
@@ -29,11 +30,13 @@ private:
     Border* _border;
     QVector<QVector4D> _colorList;
     QVector<Particles *> _particlesSystem;
+    Bonus _bonus;
 
     GLuint _playerPosAttr, _playerCenterUni, _playerColUni;
     GLuint _particlesPosAttr, _particlesColAttr;
     GLuint _tailsPosAttr, _tailsColAttr;
     GLuint _borderPosAttr, _borderColUni;
+    GLuint _bonusPosAttr, _bonusColAttr;
     GLuint _matrixUniform;
 
     QOpenGLShaderProgram *_playerProgram;
@@ -52,6 +55,10 @@ private:
     QOpenGLVertexArrayObject _borderVao;
     QOpenGLBuffer _borderVbo;
 
+    QOpenGLShaderProgram *_bonusProgram;
+    QOpenGLVertexArrayObject _bonusVao;
+    QOpenGLBuffer _bonusVbo;
+
     QTimer *_renderTimer;
     QTimer *_tailTimer;
     QTimer *_physicTimer;
@@ -65,6 +72,7 @@ private:
     void initParticlesShaderPrograme();
     void initTailsShaderPrograme();
     void initBorderShaderPrograme();
+    void initBonusShaderPrograme();
 
     void renderMenu();
     void renderGame();
