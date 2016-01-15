@@ -57,6 +57,7 @@ GameWindow::GameWindow() : _playerProgram(0), _tailsProgram(0)
 
     connect(myWorld.getMyColliderInstance(),SIGNAL(playerExplodes(Player*)),this,SLOT(playerExplodes(Player*)));
     connect(myWorld.getMyColliderInstance(),SIGNAL(destroyBody(b2Body*)),&myWorld,SLOT(addToBin(b2Body*)));
+    connect(&_bonus,SIGNAL(addBonusSignal(Food*)),this,SLOT(addBonus(Food*)));
 
     //initializeGame();
 }
@@ -218,10 +219,6 @@ void GameWindow::initBonusShaderPrograme()
     _bonusVbo.setUsagePattern(QOpenGLBuffer::StaticDraw);
     _bonusVbo.bind();
 
-    size_t bonusPosSize = _bonus.getPositions().size()*sizeof(QVector3D);
-
-    _bonusProgram->setAttributeBuffer(_bonusPosAttr, GL_FLOAT, 0, 3, 0);
-    _bonusProgram->setAttributeBuffer(_bonusColAttr, GL_FLOAT, bonusPosSize, 4, 0);
     _bonusProgram->enableAttributeArray(_bonusPosAttr);
     _bonusProgram->enableAttributeArray(_bonusColAttr);
 
@@ -416,6 +413,9 @@ void GameWindow::renderGame()
 
     size_t bonusPosSize = _bonus.getPositions().size()*sizeof(QVector3D), bonusColSize = _bonus.getColors().size()*sizeof(QVector4D);
 
+
+    _bonusProgram->setAttributeBuffer(_bonusPosAttr, GL_FLOAT, 0, 3, 0);
+    _bonusProgram->setAttributeBuffer(_bonusColAttr, GL_FLOAT, bonusPosSize, 4, 0);
     _bonusVbo.allocate(bonusPosSize + bonusColSize);
     _bonusVbo.write(0, _bonus.getPositions().constData(), bonusPosSize);
     _bonusVbo.write(bonusPosSize, _bonus.getColors().constData(), bonusColSize);
@@ -506,6 +506,11 @@ void GameWindow::destroyWorld()
 void GameWindow::switchGameMenu()
 {
     (_gameState==Menu) ? _gameState = Game : _gameState = Menu;
+}
+
+void GameWindow::addBonus(Food *food)
+{
+    myWorld.addFood(food);
 }
 
 void GameWindow::updateTails()

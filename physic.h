@@ -8,6 +8,7 @@
 #include <border.h>
 #include <Box2D/Box2D.h>
 #include "colliderclass.h"
+#include "food.h"
 
 const float PLAYER_RADIUS=0.01;
 
@@ -23,7 +24,10 @@ private :
     QVector<b2Body *> _tailsBody;
     ColliderClass myColliderInstance;
     QVector<b2Body *> _binBodies;
+    QVector<b2Body *> _bonusBody;
     bool pause = false;
+
+
 public:
     Physic();
     Physic(QVector<Player *> listPlayer);
@@ -32,6 +36,8 @@ public:
     void initBorder();
     void initPlayer();
     void initTail();
+    void addFood(Food *food);
+    void deleteFood(Food *foot);
     void updateTail();
     void updateDirection();
     void resetWorldContent();

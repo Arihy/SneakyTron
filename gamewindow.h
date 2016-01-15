@@ -12,6 +12,7 @@
 #include "physic.h"
 #include "particles.h"
 #include "bonus.h"
+#include "food.h"
 
 enum GameState
 {
@@ -96,6 +97,7 @@ public slots:
     void playerExplodes(Player *player);
     void initializeGame();
     void switchGameMenu();
+    void addBonus(Food *food);
 };
 
 #endif // GAMEWINDOW_H

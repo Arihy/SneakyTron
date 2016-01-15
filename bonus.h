@@ -28,6 +28,9 @@ public:
 
 public slots:
     void update();
+
+signals:
+    void addBonusSignal(Food *food);
 };
 
 #endif // BONUS_H

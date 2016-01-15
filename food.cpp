@@ -1,5 +1,15 @@
 #include "food.h"
 
+b2Body *Food::getBody()
+{
+    return _body;
+}
+
+void Food::setBody(b2Body *body)
+{
+    _body = body;
+}
+
 Food::Food()
 {
     _position = QVector3D();
@@ -30,6 +40,11 @@ QVector4D Food::color() const
 float Food::lifetime() const
 {
     return _lifetime;
+}
+
+EntityType Food::getEntityType()
+{
+    return FOOD;
 }
 
 float Food::timer() const

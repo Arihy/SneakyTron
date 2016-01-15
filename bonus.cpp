@@ -15,7 +15,9 @@ void Bonus::update()
         QVector3D pos;
         pos.setX(-1.0 + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX/(1.0 - (-1.0)))));
         pos.setY(-1.0 + static_cast<float>(std::rand()) / (static_cast<float>(RAND_MAX/(1.0 - (-1.0)))));
-        addBonus(new Food(pos, FOOD_FILETIME, QVector4D(0.78, 0.23, 0.7, 1.0)));
+        Food *food = new Food(pos, FOOD_FILETIME, QVector4D(0.78, 0.23, 0.7, 1.0));
+        addBonus(food);
+        emit addBonusSignal(food);
     }
     for(int i = 0; i < _bonus.size(); i++)
     {
@@ -26,6 +28,7 @@ void Bonus::update()
         }
         _bonus[i]->updateTimer();
     }
+
 }
 
 void Bonus::addBonus(Food *food)
