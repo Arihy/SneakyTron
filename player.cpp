@@ -46,6 +46,26 @@ void Player::setDirection(const QVector2D &direction)
     _direction = direction;
 }
 
+b2Body *Player::getBody()
+{
+    return _body;
+}
+
+void Player::setBody(b2Body *body)
+{
+    _body = body;
+}
+
+bool Player::getAlive() const
+{
+    return alive;
+}
+
+void Player::setAlive(bool value)
+{
+    alive = value;
+}
+
 void Player::rotate()
 {
     Utils::computeDirection(_angle, _direction);

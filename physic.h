@@ -38,12 +38,18 @@ public:
 
 
 
-    QVector<Player *> players() const;
+    QVector<Player *> players();
     void setPlayers(const QVector<Player *> &players);
     ColliderClass* getMyColliderInstance();
     b2World* getWorld() ;
     Border *getBorder() const;
     void setBorder(Border *border);
+
+    QVector<b2Body *> getPlayersBody();
+    void setPlayersBody(const QVector<b2Body *> &playersBody);
+
+    QVector<b2Body *> getTailsBody();
+    void setTailsBody(const QVector<b2Body *> &tailsBody);
 
 public slots:
     void tick();
